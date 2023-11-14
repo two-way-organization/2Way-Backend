@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { register } from './unauthenticated/register';
 import { login } from './unauthenticated/login';
 import { deregister } from './authenticated/deregister';
+import { info } from './authenticated/info';
 
 export const unauthenticatedApplicantRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -46,6 +47,7 @@ export const authenticatedApplicantRoutes = () => {
   });
 
   prefixedRouter.delete('/deregister', deregister);
+  prefixedRouter.get('/info', info);
 
   return prefixedRouter;
 };

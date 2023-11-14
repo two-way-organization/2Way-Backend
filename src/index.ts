@@ -1,16 +1,25 @@
 import koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import koaRouter from 'koa-router';
-// import zodRouter from 'koa-zod-router';
+import camelCase from 'koa-camelcase-keys';
+
+import jwt from 'koa-jwt';
+
+import { unauthenticatedApplicantRoutes } from './routes/applicants';
 
 function main() {
   const app = new koa();
-  const router = new koaRouter();
 
   app.use(bodyParser());
-  app.use(router.routes());
+  app.use(camelCase());
 
-  const port = process.env.PORT ?? 3000;
+  app.use(unauthenticatedApplicantRoutes().routes());
+  app.use(unauthenticatedApplicantRoutes().allowedMethods());
+
+  app.use(jwt({
+    secret: process.env.JWT_SECRET!,
+  }));
+
+  const port = process.env.PORT!;
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

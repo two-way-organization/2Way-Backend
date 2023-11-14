@@ -1,0 +1,44 @@
+import { prismaClient } from '../../../utils/prisma-client';
+
+import type { Next, ParameterizedContext } from 'koa';
+import type { ZodContext } from 'koa-zod-router';
+
+import type { JwtPayloadState } from '../../@types/jwt-payload-state';
+
+export interface DeactivateResponseBody {
+  message: string;
+}
+
+export const deactivate = async (
+  ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, DeactivateResponseBody>,
+  next: Next
+) => {
+  const { id, email } = ctx.state;
+
+  const account = await prismaClient.applicants.findUnique({
+    where: {
+      id,
+      email,
+    },
+  });
+
+  if (!account) {
+    ctx.status = 404;
+    ctx.body = {
+      message: 'Account not found.',
+    };
+  } else {
+    await prismaClient.applicants.delete({
+      where: {
+        id,
+      },
+    });
+
+    ctx.status = 200;
+    ctx.body = {
+      message: 'Account successfully deactivated.',
+    };
+  }
+
+  await next();
+};

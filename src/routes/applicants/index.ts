@@ -1,12 +1,9 @@
-import zodRouter, { ZodContext } from 'koa-zod-router';
+import zodRouter from 'koa-zod-router';
 import { z } from 'zod';
 
-import { register, type RegisterRequestBody, type RegisterResponseBody } from './unauthenticated/register';
-import { login, type LoginRequestBody, type LoginResponseBody } from './unauthenticated/login';
-import { deregister, type DeactivateResponseBody } from './authenticated/deregister';
-
-import type { ParameterizedContext } from 'koa';
-import type { JwtPayloadState } from '../@types/jwt-payload-state';
+import { register } from './unauthenticated/register';
+import { login } from './unauthenticated/login';
+import { deregister } from './authenticated/deregister';
 
 export const unauthenticatedApplicantRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -17,10 +14,7 @@ export const unauthenticatedApplicantRoutes = () => {
 
   prefixedRouter.post(
     '/register',
-    async (
-      ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, RegisterRequestBody, unknown>, RegisterResponseBody>,
-      next,
-    ) => register(ctx, next),
+    register,
     {
       body: z.object({
         fullName: z.string(),
@@ -32,10 +26,7 @@ export const unauthenticatedApplicantRoutes = () => {
 
   prefixedRouter.post(
     '/login',
-    async (
-      ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, LoginRequestBody, unknown>, LoginResponseBody>,
-      next,
-    ) => login(ctx, next),
+    login,
     {
       body: z.object({
         email: z.string().email(),
@@ -54,12 +45,7 @@ export const authenticatedApplicantRoutes = () => {
     },
   });
 
-  prefixedRouter.delete(
-    '/deregister',
-    async (
-      ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, DeactivateResponseBody>,
-      next
-    ) => deregister(ctx, next));
+  prefixedRouter.delete('/deregister', deregister);
 
   return prefixedRouter;
 };

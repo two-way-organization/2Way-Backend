@@ -74,6 +74,10 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
+# database
+prisma/dev.db
+prisma/dev.db-journal
+
 # dotenv environment variable files
 .env
 .env.development.local

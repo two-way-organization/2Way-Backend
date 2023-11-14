@@ -47,22 +47,35 @@ export const register = async (
 ) => {
   const { fullName, email, password } = ctx.request.body;
 
-  // password to sha3
-  const hash = new SHA3(512);
-  const hashedPassword = hash.update(password).digest('hex');
-
-  const data = await prismaClient.applicants.create({
-    data: {
-      fullName,
+  const checkAlreadyExists = await prismaClient.applicants.findUnique({
+    where: {
       email,
-      password: hashedPassword,
     },
   });
+  if (checkAlreadyExists) {
+    ctx.status = 409;
+    ctx.body = {
+      message: 'Account already exists.',
+    };
+  } else {
 
-  ctx.status = 201;
-  ctx.body = {
-    message: 'Registration successful.',
-    applicantId: data.id,
-  };
+    // password to sha3
+    const hash = new SHA3(512);
+    const hashedPassword = hash.update(password).digest('hex');
+
+    const data = await prismaClient.applicants.create({
+      data: {
+        fullName,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    ctx.status = 201;
+    ctx.body = {
+      message: 'Registration successful.',
+      applicantId: data.id,
+    };
+  }
   await next();
 };

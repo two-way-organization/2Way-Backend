@@ -47,12 +47,12 @@ export const register = async (
 ) => {
   const { fullName, email, password } = ctx.request.body;
 
-  const checkAlreadyExists = await prismaClient.applicants.findUnique({
+  const checkAccountExists = await prismaClient.applicants.findUnique({
     where: {
       email,
     },
   });
-  if (checkAlreadyExists) {
+  if (checkAccountExists) {
     ctx.status = 409;
     ctx.body = {
       message: 'Account already exists.',

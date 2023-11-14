@@ -9,7 +9,7 @@ export interface DeactivateResponseBody {
   message: string;
 }
 
-export const deactivate = async (
+export const deregister = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, DeactivateResponseBody>,
   next: Next
 ) => {

@@ -20,7 +20,7 @@
     "@types/koa__cors": "4.0.3",
     "@types/koa__router": "12.0.2",
     "@types/node": "20.9.0",
-    "@typescript-eslint/eslint-plugin": "6.10.0",
+    "@typescript-eslint/eslint-plugin": "6.11.0",
     "del-cli": "5.1.0",
     "eslint": "8.53.0",
     "eslint-plugin-import": "2.29.0",

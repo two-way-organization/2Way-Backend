@@ -17,7 +17,7 @@ export interface ErrorResponse {
   message: string;
 }
 
-export const info = async (
+export const inquire = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, InfoResponseBody | ErrorResponse>,
   next: Next
 ) => {

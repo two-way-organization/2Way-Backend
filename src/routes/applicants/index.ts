@@ -4,7 +4,8 @@ import { z } from 'zod';
 import { register } from './unauthenticated/register';
 import { login } from './unauthenticated/login';
 import { deregister } from './authenticated/deregister';
-import { info } from './authenticated/info';
+import { inquire } from './authenticated/inquire';
+import { modification } from './authenticated/modification';
 
 export const unauthenticatedApplicantRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -13,8 +14,8 @@ export const unauthenticatedApplicantRoutes = () => {
     },
   });
 
-  prefixedRouter.post(
-    '/register',
+  prefixedRouter.put(
+    '/',
     register,
     {
       body: z.object({
@@ -26,7 +27,7 @@ export const unauthenticatedApplicantRoutes = () => {
   );
 
   prefixedRouter.post(
-    '/login',
+    '/',
     login,
     {
       body: z.object({
@@ -46,8 +47,15 @@ export const authenticatedApplicantRoutes = () => {
     },
   });
 
-  prefixedRouter.delete('/deregister', deregister);
-  prefixedRouter.get('/info', info);
+  prefixedRouter.delete('/', deregister);
+  prefixedRouter.get('/', inquire);
+  prefixedRouter.patch('/', modification, {
+    body: z.object({
+      fullName: z.string().optional(),
+      email: z.string().email().optional(),
+      password: z.string().optional(),
+    }),
+  });
 
   return prefixedRouter;
 };

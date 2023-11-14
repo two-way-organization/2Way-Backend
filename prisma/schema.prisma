@@ -10,11 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Applicants {
-  id        Int      @id @default(autoincrement())
-  fullName  String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Language {
+  id         Int         @id @default(autoincrement())
+  name       String
+  applicants Applicant[]
+}
+
+model Applicant {
+  id               Int        @id @default(autoincrement())
+  fullName         String
+  email            String     @unique
+  preferedLanguage Language[]
+  password         String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Company {
+  id                          Int    @id @default(autoincrement())
+  companyName                 String
+  ceoName                     String
+  hrName                      String
+  businessType                String
+  registrationNumber          String @unique
+  email                       String @unique
+  password                    String
+  registrationCertificatePath String
 }

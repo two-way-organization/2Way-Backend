@@ -6,6 +6,7 @@ import { login } from './unauthenticated/login';
 import { deregister } from './authenticated/deregister';
 import { inquire } from './authenticated/inquire';
 import { modification } from './authenticated/modification';
+import { jobs } from './unauthenticated/home/jobs';
 
 export const unauthenticatedApplicantRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -36,6 +37,8 @@ export const unauthenticatedApplicantRoutes = () => {
       }),
     }
   );
+  
+  prefixedRouter.get('/home/jobs', jobs);
 
   return prefixedRouter;
 };

@@ -6,6 +6,7 @@ import { login } from './unauthenticated/login';
 import { deregister } from './authenticated/deregister';
 import { inquire } from './authenticated/inquire';
 import { modification } from './authenticated/modification';
+import { feedbacks } from './authenticated/home/feedbacks';
 import { jobs } from './unauthenticated/home/jobs';
 
 export const unauthenticatedApplicantRoutes = () => {
@@ -59,6 +60,8 @@ export const authenticatedApplicantRoutes = () => {
       password: z.string().optional(),
     }),
   });
+
+  prefixedRouter.get('/home/feedbacks', feedbacks);
 
   return prefixedRouter;
 };

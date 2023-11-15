@@ -23,7 +23,7 @@ export const inquire = async (
 ) => {
   const { id, email } = ctx.state;
 
-  const account = await prismaClient.applicants.findUnique({
+  const account = await prismaClient.applicant.findUnique({
     where: {
       id,
       email,

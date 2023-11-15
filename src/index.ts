@@ -17,6 +17,8 @@ function main() {
 
   app.use(jwt({
     secret: process.env.JWT_SECRET!,
+    algorithms: [process.env.JWT_ALGORITHM!],
+    issuer: process.env.JWT_ISSUER!,
   }));
 
   const port = process.env.PORT!;

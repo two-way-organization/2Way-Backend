@@ -37,7 +37,7 @@ export const modification = async (
       hashedPassword = hash.update(password).digest('hex');
     }
 
-    await prismaClient.applicants.update({
+    await prismaClient.applicant.update({
       where: {
         id: ctx.state.id,
       },

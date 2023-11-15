@@ -47,7 +47,7 @@ export const register = async (
 ) => {
   const { fullName, email, password } = ctx.request.body;
 
-  const checkAccountExists = await prismaClient.applicants.findUnique({
+  const checkAccountExists = await prismaClient.applicant.findUnique({
     where: {
       email,
     },
@@ -63,7 +63,7 @@ export const register = async (
     const hash = new SHA3(512);
     const hashedPassword = hash.update(password).digest('hex');
 
-    const data = await prismaClient.applicants.create({
+    const data = await prismaClient.applicant.create({
       data: {
         fullName,
         email,

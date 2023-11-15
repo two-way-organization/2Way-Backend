@@ -15,7 +15,7 @@ export const deregister = async (
 ) => {
   const { id, email } = ctx.state;
 
-  const account = await prismaClient.applicants.findUnique({
+  const account = await prismaClient.applicant.findUnique({
     where: {
       id,
       email,
@@ -28,7 +28,7 @@ export const deregister = async (
       message: 'Account not found.',
     };
   } else {
-    await prismaClient.applicants.delete({
+    await prismaClient.applicant.delete({
       where: {
         id,
       },

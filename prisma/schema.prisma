@@ -72,9 +72,20 @@ model CompanyProfile {
 }
 
 model Company {
-  id              Int              @id @default(autoincrement())
-  companyProfiles CompanyProfile[]
-  jobs            Job[]
+  id                          Int              @id @default(autoincrement())
+  companyName                 String
+  ceoName                     String
+  hrName                      String?
+  businessType                String
+  registrationNumber          String           @unique
+  email                       String           @unique
+  password                    String
+  registrationCertificatePath String?
+  certificateVerified         Boolean          @default(false)
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @default(now()) @updatedAt
+  companyProfiles             CompanyProfile[]
+  jobs                        Job[]
 }
 
 model Job {

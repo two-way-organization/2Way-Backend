@@ -50,7 +50,20 @@ CREATE TABLE `CompanyProfile` (
 -- CreateTable
 CREATE TABLE `Company` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `companyName` VARCHAR(191) NOT NULL,
+    `ceoName` VARCHAR(191) NOT NULL,
+    `hrName` VARCHAR(191) NULL,
+    `businessType` VARCHAR(191) NOT NULL,
+    `registrationNumber` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `registrationCertificatePath` VARCHAR(191) NULL,
+    `certificateVerified` BOOLEAN NOT NULL DEFAULT false,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `Company_registrationNumber_key`(`registrationNumber`),
+    UNIQUE INDEX `Company_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -12,11 +12,17 @@ export interface ErrorResponse {
 export interface InfoResponseBody extends Response {
   profile: {
     id: number;
-    fullName: string;
+    companyName: string;
+    ceoName: string;
+    hrName: string | null;
+    businessType: string;
+    businessRegistrationNumber: string;
     email: string;
+    registrationCertificatePath: string | null;
+    certificateVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
-  };
+  }
 }
 
 export const inquire = async (
@@ -25,7 +31,7 @@ export const inquire = async (
 ) => {
   const { id, email } = ctx.state;
 
-  const account = await prismaClient.applicant.findUnique({
+  const account = await prismaClient.company.findUnique({
     where: {
       id,
       email,
@@ -43,11 +49,17 @@ export const inquire = async (
       message: 'Profile retrieval successful.',
       profile: {
         id: account.id,
-        fullName: account.fullName,
+        companyName: account.companyName,
+        ceoName: account.ceoName,
+        hrName: account.hrName,
+        businessType: account.businessType,
+        businessRegistrationNumber: account.registrationNumber,
         email: account.email,
+        registrationCertificatePath: account.registrationCertificatePath,
+        certificateVerified: account.certificateVerified,
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,
-      },
+      }
     };
   }
 

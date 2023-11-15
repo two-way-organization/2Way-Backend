@@ -54,8 +54,8 @@ export const authenticatedCompanyRoutes = () => {
   prefixedRouter.get('/', inquire);
   prefixedRouter.patch('/', modification, {
     body: z.object({
-      fullName: z.string().optional(),
-      email: z.string().email().optional(),
+      companyName: z.string().optional(),
+      hrName: z.string().optional(),
       password: z.string().optional(),
     }),
   });

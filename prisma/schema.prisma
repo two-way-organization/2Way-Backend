@@ -6,34 +6,153 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Language {
-  id         Int         @id @default(autoincrement())
-  name       String
-  applicants Applicant[]
+enum JobType {
+  Regular // 정규직
+  Contract // 계약직
+  Intern // 인턴
+}
+
+enum ExperienceLevel {
+  Newcomer // 신입
+  Experienced // 경력
+  Unspecified // 경력무관
+}
+
+enum JobStatus {
+  Ongoing // 진행중
+  Reviewing // 확인중
+  Waiting // 대기
+  Closed // 마감
+  Incomplete // 미완성
 }
 
 model Applicant {
-  id               Int        @id @default(autoincrement())
-  fullName         String
-  email            String     @unique
-  preferedLanguage Language[]
-  password         String
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id                Int                @id @default(autoincrement())
+  fullName          String
+  email             String             @unique
+  password          String
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now()) @updatedAt
+  applicantProfiles ApplicantProfile[]
+  resumes           Resume[]
+}
+
+model ApplicantProfile {
+  id              Int              @id @default(autoincrement())
+  applicantId     Int              @unique
+  email           String           @unique
+  fullName        String
+  phone           String?
+  resume          String?
+  skills          String?
+  experience      String?
+  education       String?
+  applicant       Applicant        @relation(fields: [applicantId], references: [id])
+  applicantSkills ApplicantSkill[]
+}
+
+model CompanyProfile {
+  id                      Int     @id @default(autoincrement())
+  companyId               Int
+  companyName             String
+  address                 String
+  registrationNumber      String  @unique
+  revenueOrInvestment     Int?
+  numberOfEmployees       Int?
+  introduction            String?
+  serviceName             String?
+  serviceUrl              String?
+  registrationCertificate String?
+  website                 String?
+  company                 Company @relation(fields: [companyId], references: [id])
 }
 
 model Company {
-  id                          Int    @id @default(autoincrement())
-  companyName                 String
-  ceoName                     String
-  hrName                      String
-  businessType                String
-  registrationNumber          String @unique
-  email                       String @unique
-  password                    String
-  registrationCertificatePath String
+  id              Int              @id @default(autoincrement())
+  companyProfiles CompanyProfile[]
+  jobs            Job[]
+}
+
+model Job {
+  postId              Int             @id @default(autoincrement())
+  companyId           Int
+  position            String
+  title               String
+  jobType             JobType
+  location            String
+  startDate           DateTime?
+  endDate             DateTime?
+  numberOfVacancies   Int             @default(1)
+  description         String?
+  qualifications      String?
+  responsibilities    String?
+  workHours           String?
+  workDays            String?
+  contractPeriod      String?
+  teamSize            Int?
+  reportingTo         String?
+  experienceLevel     ExperienceLevel
+  salaryRange         String?
+  applicationDeadline DateTime?
+  interviewProcess    String?
+  requiredDocuments   String?
+  skills              Json?
+  thumbnailUrl        String?
+  status              JobStatus
+  viewCount           Int             @default(0)
+  applicationCount    Int             @default(0)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @default(now()) @updatedAt
+  company             Company         @relation(fields: [companyId], references: [id])
+  jobPostSkills       JobPostSkill[]
+}
+
+model Skill {
+  id              Int              @id @default(autoincrement())
+  skillName       String
+  category        String?
+  applicantSkills ApplicantSkill[]
+  jobPostSkills   JobPostSkill[]
+}
+
+model ApplicantSkill {
+  applicantId Int
+  skillId     Int
+  applicant   ApplicantProfile @relation(fields: [applicantId], references: [id])
+  skill       Skill            @relation(fields: [skillId], references: [id])
+
+  @@id([applicantId, skillId])
+}
+
+model JobPostSkill {
+  jobpostId Int
+  skillId   Int
+  jobpost   Job   @relation(fields: [jobpostId], references: [postId])
+  skill     Skill @relation(fields: [skillId], references: [id])
+
+  @@id([jobpostId, skillId])
+}
+
+model Resume {
+  resumeId    Int       @id @default(autoincrement())
+  applicantId Int       @unique
+  title       String?
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  senderId    Int      @unique
+  applicantId Int      @unique
+  title       String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }

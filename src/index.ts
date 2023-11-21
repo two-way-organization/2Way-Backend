@@ -1,6 +1,9 @@
+import process from 'node:process';
+
 import koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import camelCase from 'koa-camelcase-keys';
+import error from 'koa-json-error';
 
 import jwt from 'koa-jwt';
 
@@ -10,12 +13,21 @@ import { authenticatedApplicantRoutes, unauthenticatedApplicantRoutes } from './
 import { authenticatedCompanyRoutes, unauthenticatedCompanyRoutes } from './routes/companies';
 import { authenticatedUtilsRoutes } from './routes/utils';
 
+const omit = (key: string, obj: Record<string, unknown>) => {
+  const { [key]: omitted, ...rest } = obj;
+  return rest;
+};
+
 function main() {
   const app = new koa();
 
   app.use(bodyParser());
   app.use(camelCase());
   app.use(cors());
+  app.use(error({
+    // Avoid showing the stacktrace in 'production' env
+    postFormat: (e, obj) => process.env.NODE_ENV === 'production' ? omit('stack', obj as Record<string, unknown>) : obj as unknown
+  }));
 
   const unauthenticatedApplicant = unauthenticatedApplicantRoutes();
   const unauthenticatedCompany = unauthenticatedCompanyRoutes();

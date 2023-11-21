@@ -32,6 +32,9 @@ dependencies:
   koa-camelcase-keys:
     specifier: 1.0.1
     version: 1.0.1
+  koa-json-error:
+    specifier: 3.1.2
+    version: 3.1.2
   koa-jwt:
     specifier: 4.0.4
     version: 4.0.4
@@ -46,12 +49,18 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@total-typescript/ts-reset':
+    specifier: 0.5.1
+    version: 0.5.1
   '@types/koa':
     specifier: 2.13.11
     version: 2.13.11
   '@types/koa-bodyparser':
     specifier: 4.3.12
     version: 4.3.12
+  '@types/koa-json-error':
+    specifier: 3.1.6
+    version: 3.1.6
   '@types/koa__cors':
     specifier: 4.0.3
     version: 4.0.3
@@ -445,6 +454,10 @@ packages:
     resolution: {integrity: sha512-Mt2q+GNJpU2vFn6kif24oRSBQv1KOkYaterQsi0k2/lA+dLvhRX6Lm26gon6PYHwUM8/h8KRgXIUMU0PCLB6bw==}
     requiresBuild: true
 
+  /@total-typescript/ts-reset@0.5.1:
+    resolution: {integrity: sha512-AqlrT8YA1o7Ff5wPfMOL0pvL+1X+sw60NN6CcOCqs658emD6RfiXhF7Gu9QcfKBH7ELY2nInLhKSCWVoNL70MQ==}
+    dev: true
+
   /@types/accepts@1.3.7:
     resolution: {integrity: sha512-Pay9fq2lM2wXPWbteBsRAGiWH2hig4ZE2asK+mm7kUzlxRTfL961rj89I6zV/E3PcIkDqyuBEcMxFT7rccugeQ==}
     dependencies:
@@ -526,6 +539,12 @@ packages:
     resolution: {integrity: sha512-4Olc63RY+MKvxMwVknCUDhRQX1pFQoBZ/lXcRLP69PQkEpze/0cr8LNqJQe5NFb/b19DWi2a5bTi2VAlQzhJuA==}
     dependencies:
       '@types/koa': 2.13.11
+
+  /@types/koa-json-error@3.1.6:
+    resolution: {integrity: sha512-0GCGMjy3m+Yw024GtXIaVinhQT5Lc83sB5vwNlVksoDF2Dn4nOmb25P/KR5z3st/WbURgJHaI3O4u1MyVVTpUg==}
+    dependencies:
+      '@types/koa': 2.13.11
+    dev: true
 
   /@types/koa@2.13.11:
     resolution: {integrity: sha512-0HZSGNdmLlLRvSxv0ngLSp09Hw98c+2XL3ZRYmkE6y8grqTweKEyyaj7LgxkyPUv0gQ5pNS/a7kHXo2Iwha1rA==}
@@ -2324,6 +2343,14 @@ packages:
       koa-compose: 4.1.0
     dev: false
 
+  /koa-json-error@3.1.2:
+    resolution: {integrity: sha512-nqfNwD4W+hYaJijFl+6qNSQJHbTS4vp+gXTdXl5U8YK2PVNzCF0HnLZwyKHaMeBebhanAgmfheQv96wLDjLRxg==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      lodash.compact: 3.0.1
+      lodash.curry: 4.1.1
+    dev: false
+
   /koa-jwt@4.0.4:
     resolution: {integrity: sha512-Tid9BQfpVtUG/8YZV38a+hDKll0pfVhfl7A/2cNaYThS1cxMFXylZzfARqHQqvNhHy9qM+qkxd4/z6EaIV4SAQ==}
     engines: {node: '>= 8'}
@@ -2404,6 +2431,14 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash.compact@3.0.1:
+    resolution: {integrity: sha512-2ozeiPi+5eBXW1CLtzjk8XQFhQOEMwwfxblqeq6EGyTxZJ1bPATqilY0e6g2SLQpP4KuMeuioBhEnWz5Pr7ICQ==}
+    dev: false
+
+  /lodash.curry@4.1.1:
+    resolution: {integrity: sha512-/u14pXGviLaweY5JI0IUzgzF2J6Ne8INyzAZjImcryjgkZ+ebruBxy2/JaOOkTqScddcYtakjhSaeemV8lR0tA==}
+    dev: false
 
   /lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}

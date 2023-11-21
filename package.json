@@ -17,8 +17,10 @@
   "author": "JellyBrick <shlee1503@naver.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@total-typescript/ts-reset": "0.5.1",
     "@types/koa": "2.13.11",
     "@types/koa-bodyparser": "4.3.12",
+    "@types/koa-json-error": "3.1.6",
     "@types/koa__cors": "4.0.3",
     "@types/koa__router": "12.0.4",
     "@types/node": "20.9.0",
@@ -41,6 +43,7 @@
     "koa": "2.14.2",
     "koa-bodyparser": "4.4.1",
     "koa-camelcase-keys": "1.0.1",
+    "koa-json-error": "3.1.2",
     "koa-jwt": "4.0.4",
     "koa-zod-router": "2.2.0",
     "sha3": "2.1.4",

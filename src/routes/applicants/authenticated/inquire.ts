@@ -1,6 +1,6 @@
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { Next, ParameterizedContext } from 'koa';
+import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../@types/jwt-payload-state';
@@ -21,7 +21,6 @@ export interface InfoResponseBody extends Response {
 
 export const inquire = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, InfoResponseBody | ErrorResponse>,
-  next: Next
 ) => {
   const { id, email } = ctx.state;
 
@@ -50,6 +49,4 @@ export const inquire = async (
       },
     };
   }
-
-  await next();
 };

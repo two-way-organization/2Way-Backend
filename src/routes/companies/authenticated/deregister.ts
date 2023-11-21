@@ -1,6 +1,6 @@
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { Next, ParameterizedContext } from 'koa';
+import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../@types/jwt-payload-state';
@@ -11,7 +11,6 @@ export interface DeactivateResponseBody {
 
 export const deregister = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, DeactivateResponseBody>,
-  next: Next
 ) => {
   const { id, email } = ctx.state;
 
@@ -39,6 +38,4 @@ export const deregister = async (
       message: 'Account successfully deactivated.',
     };
   }
-
-  await next();
 };

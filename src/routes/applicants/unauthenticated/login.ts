@@ -5,8 +5,6 @@ import jwt, { type Algorithm } from 'jsonwebtoken';
 
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { Next } from 'koa';
-
 export interface LoginRequestBody {
   email: string;
   password: string;
@@ -48,7 +46,6 @@ const invalidEmailOrPassword = {
  */
 export const login = async (
   ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, LoginRequestBody, unknown>, LoginResponseBody>,
-  next: Next
 ) => {
   const { email, password } = ctx.request.body;
 
@@ -80,7 +77,6 @@ export const login = async (
           }
         ),
       };
-      await next();
       return;
     }
   }
@@ -89,5 +85,4 @@ export const login = async (
   ctx.body = {
     message: invalidEmailOrPassword.message,
   };
-  await next();
 };

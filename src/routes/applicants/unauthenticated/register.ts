@@ -2,7 +2,7 @@ import { SHA3 } from 'sha3';
 
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { Next, ParameterizedContext } from 'koa';
+import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 export interface RegisterRequestBody {
@@ -43,7 +43,6 @@ export interface RegisterResponseBody {
  */
 export const register = async (
   ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, RegisterRequestBody, unknown>, RegisterResponseBody>,
-  next: Next
 ) => {
   const { fullName, email, password } = ctx.request.body;
 
@@ -77,5 +76,4 @@ export const register = async (
       applicantId: data.id,
     };
   }
-  await next();
 };

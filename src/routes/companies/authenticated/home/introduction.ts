@@ -1,7 +1,7 @@
 import { prismaClient } from '../../../../utils/prisma-client';
 
 import type { ZodContext } from 'koa-zod-router';
-import type { Next, ParameterizedContext } from 'koa';
+import type { ParameterizedContext } from 'koa';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
@@ -19,7 +19,6 @@ export interface ErrorResponse {
 
 export const introduction = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, IntroductionResponseBody | ErrorResponse>,
-  next: Next,
 ) => {
   const { id: companyId, email } = ctx.state;
 
@@ -51,6 +50,4 @@ export const introduction = async (
       message: 'Company not found.',
     };
   }
-
-  await next();
 };

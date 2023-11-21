@@ -2,7 +2,7 @@ import { SHA3 } from 'sha3';
 
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { Next, ParameterizedContext } from 'koa';
+import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../@types/jwt-payload-state';
@@ -20,7 +20,6 @@ export interface ModificationResponseBody {
 
 export const modification = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, ModificationRequestBody, unknown>, ModificationResponseBody>,
-  next: Next
 ) => {
   const { companyName, hrName, password } = ctx.request.body;
 
@@ -53,5 +52,4 @@ export const modification = async (
       message: 'Account successfully updated.',
     };
   }
-  await next();
 };

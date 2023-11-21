@@ -2,7 +2,7 @@ import { UserApi } from '@solvedac-community/api';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
-import type { JwtPayloadState } from '../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../@types/jwt-payload-state';
 
 export interface SolvedAcTierRequestBody {
   solvedAcUsername: string;

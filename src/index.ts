@@ -8,6 +8,7 @@ import cors from '@koa/cors';
 
 import { authenticatedApplicantRoutes, unauthenticatedApplicantRoutes } from './routes/applicants';
 import { authenticatedCompanyRoutes, unauthenticatedCompanyRoutes } from './routes/companies';
+import { authenticatedUtilsRoutes } from './routes/utils';
 
 function main() {
   const app = new koa();
@@ -31,10 +32,13 @@ function main() {
   
   const authenticatedApplicant = authenticatedApplicantRoutes();
   const authenticatedCompany = authenticatedCompanyRoutes();
+  const authenticatedUtils = authenticatedUtilsRoutes();
   app.use(authenticatedApplicant.routes());
   app.use(authenticatedApplicant.allowedMethods());
   app.use(authenticatedCompany.routes());
   app.use(authenticatedCompany.allowedMethods());
+  app.use(authenticatedUtils.routes());
+  app.use(authenticatedUtils.allowedMethods());
 
   const port = process.env.PORT!;
   app.listen(port, () => {

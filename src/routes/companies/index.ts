@@ -6,6 +6,7 @@ import { login } from './unauthenticated/login';
 import { deregister } from './authenticated/deregister';
 import { inquire } from './authenticated/inquire';
 import { modification } from './authenticated/modification';
+import { introduction } from './authenticated/home/introduction';
 
 export const unauthenticatedCompanyRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -59,6 +60,7 @@ export const authenticatedCompanyRoutes = () => {
       password: z.string().optional(),
     }),
   });
+  prefixedRouter.get('/home/introduction', introduction);
 
   return prefixedRouter;
 };

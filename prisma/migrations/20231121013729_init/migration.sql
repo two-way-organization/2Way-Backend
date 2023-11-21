@@ -34,6 +34,7 @@ CREATE TABLE `CompanyProfile` (
     `companyId` INTEGER NOT NULL,
     `companyName` VARCHAR(191) NOT NULL,
     `address` VARCHAR(191) NOT NULL,
+    `phoneNumber` VARCHAR(191) NOT NULL,
     `registrationNumber` VARCHAR(191) NOT NULL,
     `revenueOrInvestment` INTEGER NULL,
     `numberOfEmployees` INTEGER NULL,

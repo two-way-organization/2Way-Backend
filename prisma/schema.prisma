@@ -60,6 +60,7 @@ model CompanyProfile {
   companyId               Int
   companyName             String
   address                 String
+  phoneNumber             String
   registrationNumber      String  @unique
   revenueOrInvestment     Int?
   numberOfEmployees       Int?

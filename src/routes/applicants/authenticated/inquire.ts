@@ -22,7 +22,7 @@ export interface InfoResponseBody extends Response {
 export const inquire = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, InfoResponseBody | ErrorResponse>,
 ) => {
-  const { id, email } = ctx.state;
+  const { id, email } = ctx.state.user;
 
   const account = await prismaClient.applicant.findUnique({
     where: {

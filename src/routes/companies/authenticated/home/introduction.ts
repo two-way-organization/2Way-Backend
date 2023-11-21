@@ -20,7 +20,7 @@ export interface ErrorResponse {
 export const introduction = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, IntroductionResponseBody | ErrorResponse>,
 ) => {
-  const { id: companyId, email } = ctx.state;
+  const { id: companyId, email } = ctx.state.user;
 
   const company = await prismaClient.company.findUnique({
     where: {

@@ -12,7 +12,7 @@ export interface DeactivateResponseBody {
 export const deregister = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, DeactivateResponseBody>,
 ) => {
-  const { id, email } = ctx.state;
+  const { id, email } = ctx.state.user;
 
   const account = await prismaClient.company.findUnique({
     where: {

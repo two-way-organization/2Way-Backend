@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { githubLanguageUsage } from './authenticated/github-language-usage';
 import { solvedAcTier } from './authenticated/solved-ac-tier';
+import { roadAddress } from './authenticated/road-address';
 
 export const authenticatedUtilsRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -26,6 +27,17 @@ export const authenticatedUtilsRoutes = () => {
     {
       body: z.object({
         solvedAcUsername: z.string(),
+      }),
+    }
+  );
+  prefixedRouter.post(
+    '/road-address',
+    roadAddress,
+    {
+      body: z.object({
+        keyword: z.string(),
+        currentPage: z.number(),
+        countPerPage: z.number(),
       }),
     }
   );

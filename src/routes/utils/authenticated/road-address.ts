@@ -163,7 +163,7 @@ export interface AddressResponseBody {
      * 관할 주민센터
      */
     hemdNm?: string;
-  };
+  }[];
 }
 
 

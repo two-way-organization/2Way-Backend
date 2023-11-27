@@ -7,5 +7,6 @@ export interface JwtPayloadState {
      */
     id: number;
     email: string;
+    role: string;
   };
 }

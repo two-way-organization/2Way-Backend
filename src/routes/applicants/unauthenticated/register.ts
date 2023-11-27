@@ -39,7 +39,6 @@ export interface RegisterResponseBody {
  * }
  *
  * @param ctx
- * @param next
  */
 export const register = async (
   ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, RegisterRequestBody, unknown>, RegisterResponseBody>,

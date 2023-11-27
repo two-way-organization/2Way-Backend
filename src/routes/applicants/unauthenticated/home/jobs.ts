@@ -18,7 +18,7 @@ export const jobs = async (
 ) => {
   const jobList = await prismaClient.job.findMany({
     select: {
-      postId: true,
+      id: true,
       company: {
         select: {
           companyName: true,
@@ -30,7 +30,7 @@ export const jobs = async (
   });
 
   const jobs = jobList.map((job) => ({
-    postId: job.postId,
+    postId: job.id,
     companyTitle: job.company.companyName,
     jobTitle: job.title,
     postedAt: job.createdAt,

@@ -7,9 +7,8 @@ import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
 export interface IntroductionResponseBody {
   companyName: string;
-  introduction: (string | null)[];
-  ceoName: string;
-  phoneNumber: (string | null)[];
+  introduction: (string | null);
+  ceoName: string | null;
   email: string;
 }
 
@@ -31,7 +30,7 @@ export const introduction = async (
       companyName: true,
       ceoName: true,
       email: true,
-      companyProfiles: true,
+      companyInfo: true,
     },
   });
 
@@ -39,9 +38,8 @@ export const introduction = async (
     ctx.status = 200;
     ctx.body = {
       companyName: company.companyName,
-      introduction: company.companyProfiles.map((profile) => profile.introduction),
+      introduction: company.companyInfo?.introduction ?? null,
       ceoName: company.ceoName,
-      phoneNumber: company.companyProfiles.map((profile) => profile.phoneNumber),
       email: company.email,
     };
   } else {

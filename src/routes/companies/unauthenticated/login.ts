@@ -42,7 +42,6 @@ const invalidEmailOrPassword = {
  * }
  *
  * @param ctx
- * @param next
  */
 export const login = async (
   ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, LoginRequestBody, unknown>, LoginResponseBody>,
@@ -67,7 +66,8 @@ export const login = async (
         token: jwt.sign(
           {
             id: company.id,
-            email: company.email
+            email: company.email,
+            role: 'company',
           },
           process.env.JWT_SECRET!,
           {

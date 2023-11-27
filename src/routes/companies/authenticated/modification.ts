@@ -38,7 +38,7 @@ export const modification = async (
 
     await prismaClient.company.update({
       where: {
-        id: ctx.state.id,
+        id: ctx.state.user.id,
       },
       data: {
         companyName,

@@ -13,13 +13,17 @@ export interface InfoResponseBody extends Response {
   profile: {
     id: number;
     companyName: string;
-    ceoName: string;
+    ceoName: string | null;
     hrName: string | null;
-    businessType: string;
     businessRegistrationNumber: string;
     email: string;
-    registrationCertificatePath: string | null;
-    certificateVerified: boolean;
+    companyCertification: {
+      id: number;
+      companyId: number;
+      registrationNumber: string | null;
+      registrationCertificatePath: string | null;
+      certificateVerified: boolean;
+    }[] | null;
     createdAt: Date;
     updatedAt: Date;
   }
@@ -43,6 +47,12 @@ export const inquire = async (
       message: 'Account not found.',
     };
   } else {
+    const cert = await prismaClient.companyCertification.findMany({
+      where: {
+        companyId: id,
+      },
+    });
+    
     ctx.status = 200;
     ctx.body = {
       message: 'Profile retrieval successful.',
@@ -51,11 +61,9 @@ export const inquire = async (
         companyName: account.companyName,
         ceoName: account.ceoName,
         hrName: account.hrName,
-        businessType: account.businessType,
         businessRegistrationNumber: account.registrationNumber,
         email: account.email,
-        registrationCertificatePath: account.registrationCertificatePath,
-        certificateVerified: account.certificateVerified,
+        companyCertification: cert ?? null,
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,
       }

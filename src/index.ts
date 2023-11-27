@@ -45,6 +45,7 @@ function main() {
   const authenticatedApplicant = authenticatedApplicantRoutes();
   const authenticatedCompany = authenticatedCompanyRoutes();
   const authenticatedUtils = authenticatedUtilsRoutes();
+
   app.use(authenticatedApplicant.routes());
   app.use(authenticatedApplicant.allowedMethods());
   app.use(authenticatedCompany.routes());

@@ -11,6 +11,7 @@ import { jobInquire } from './authenticated/inquire';
 import { jobAllInquire } from './authenticated/all-inquire';
 import { jobModification } from './authenticated/modification';
 import { jobDelete } from './authenticated/delete';
+import { jobChangeState } from './authenticated/change-state';
 
 export const unauthenticatedJobRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -113,6 +114,14 @@ export const authenticatedJobRoutes = () => {
   prefixedRouter.delete('/:id', jobDelete, {
     params: z.object({
       id: z.number(),
+    }),
+  });
+  prefixedRouter.patch('/:id/status', jobChangeState, {
+    params: z.object({
+      id: z.number(),
+    }),
+    body: z.object({
+      status: z.enum(['Ongoing', 'Reviewing', 'Waiting', 'Closed', 'Incomplete']),
     }),
   });
 

@@ -3,7 +3,7 @@ import { prismaClient } from '../../../utils/prisma-client';
 import type { Job } from '@prisma/client';
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
-import { JwtPayloadState } from '../../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../@types/jwt-payload-state';
 
 export interface JobModificationResponseBody {
   message: string;

@@ -7,7 +7,9 @@ import { step3 } from './authenticated/create/step3';
 import { step4 } from './authenticated/create/step4';
 import { step5 } from './authenticated/create/step5';
 import { completePost } from './authenticated/complete/job-id-post';
-import { completeGet } from './authenticated/complete/job-id-get';
+import { jobInquire } from './authenticated/inquire';
+import { jobAllInquire } from './authenticated/all-inquire';
+import { jobModification } from './authenticated/modification';
 
 export const unauthenticatedJobRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -84,9 +86,28 @@ export const authenticatedJobRoutes = () => {
       id: z.number(),
     }),
   });
-  prefixedRouter.get('/complete/:id', completeGet, {
+  prefixedRouter.get('/:id', jobInquire, {
     params: z.object({
       id: z.number(),
+    }),
+  });
+  prefixedRouter.get('/', jobAllInquire);
+  prefixedRouter.put('/:id', jobModification, {
+    params: z.object({
+      id: z.number(),
+    }),
+    body: z.object({
+      title: z.string(),
+      position: z.string(),
+      startDate: z.date(),
+      endDate: z.date(),
+      numberOfVacancies: z.number(),
+      experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),
+      experienceYears: z.string(),
+      jobType: z.enum(['Regular', 'Contract', 'Intern']),
+      contractPeriod: z.string(),
+      salary: z.string(),
+      location: z.string(),
     }),
   });
 

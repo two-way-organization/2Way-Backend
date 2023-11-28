@@ -1,20 +1,20 @@
-import { prismaClient } from '../../../../utils/prisma-client';
+import { prismaClient } from '../../../utils/prisma-client';
 
 import type { Job } from '@prisma/client';
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
-export interface JobCompleteResponseBody {
+export interface JobInquireResponseBody {
   message: string;
   data?: Job;
 }
 
-export interface JobCompleteRequestParams {
+export interface JobInquireRequestParams {
   id: number;
 }
 
-export const completeGet = async (
-  ctx: ParameterizedContext<unknown, ZodContext<unknown, JobCompleteRequestParams, unknown, unknown, unknown>, JobCompleteResponseBody>,
+export const jobInquire = async (
+  ctx: ParameterizedContext<unknown, ZodContext<unknown, JobInquireRequestParams, unknown, unknown, unknown>, JobInquireResponseBody>,
 ) => {
   const { id } = ctx.request.params;
 
@@ -44,7 +44,7 @@ export const completeGet = async (
 
   ctx.status = 200;
   ctx.body = {
-    message: 'Job create completed.',
+    message: 'Job get completed.',
     data: job,
   };
 };

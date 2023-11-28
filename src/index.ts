@@ -12,6 +12,7 @@ import cors from '@koa/cors';
 import { authenticatedApplicantRoutes, unauthenticatedApplicantRoutes } from './routes/applicants';
 import { authenticatedCompanyRoutes, unauthenticatedCompanyRoutes } from './routes/companies';
 import { authenticatedUtilsRoutes } from './routes/utils';
+import { authenticatedJobRoutes } from './routes/job';
 
 const omit = (key: string, obj: Record<string, unknown>) => {
   const { [key]: omitted, ...rest } = obj;
@@ -45,6 +46,7 @@ function main() {
   const authenticatedApplicant = authenticatedApplicantRoutes();
   const authenticatedCompany = authenticatedCompanyRoutes();
   const authenticatedUtils = authenticatedUtilsRoutes();
+  const authenticatedJob = authenticatedJobRoutes();
 
   app.use(authenticatedApplicant.routes());
   app.use(authenticatedApplicant.allowedMethods());
@@ -52,6 +54,8 @@ function main() {
   app.use(authenticatedCompany.allowedMethods());
   app.use(authenticatedUtils.routes());
   app.use(authenticatedUtils.allowedMethods());
+  app.use(authenticatedJob.routes());
+  app.use(authenticatedJob.allowedMethods());
 
   const port = process.env.PORT!;
   app.listen(port, () => {

@@ -10,6 +10,7 @@ import { completePost } from './authenticated/complete/job-id-post';
 import { jobInquire } from './authenticated/inquire';
 import { jobAllInquire } from './authenticated/all-inquire';
 import { jobModification } from './authenticated/modification';
+import { jobDelete } from './authenticated/delete';
 
 export const unauthenticatedJobRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -30,7 +31,6 @@ export const authenticatedJobRoutes = () => {
 
   prefixedRouter.put('/create/step1', step1, {
     body: z.object({
-      companyId: z.number(),
       title: z.string(),
       position: z.string(),
       startDate: z.date(),
@@ -108,6 +108,11 @@ export const authenticatedJobRoutes = () => {
       contractPeriod: z.string(),
       salary: z.string(),
       location: z.string(),
+    }),
+  });
+  prefixedRouter.delete('/:id', jobDelete, {
+    params: z.object({
+      id: z.number(),
     }),
   });
 

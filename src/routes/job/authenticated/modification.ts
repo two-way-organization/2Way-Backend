@@ -3,6 +3,7 @@ import { prismaClient } from '../../../utils/prisma-client';
 import type { Job } from '@prisma/client';
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
+import { JwtPayloadState } from '../../@types/jwt-payload-state';
 
 export interface JobModificationResponseBody {
   message: string;
@@ -28,7 +29,7 @@ export interface JobModificationRequestBody {
 }
 
 export const jobModification = async (
-  ctx: ParameterizedContext<unknown, ZodContext<unknown, JobMofiicationRequestParams, unknown, JobModificationRequestBody, unknown>, JobModificationResponseBody>,
+  ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, JobMofiicationRequestParams, unknown, JobModificationRequestBody, unknown>, JobModificationResponseBody>,
 ) => {
   const { id } = ctx.request.params;
   const {
@@ -56,30 +57,35 @@ export const jobModification = async (
     ctx.body = {
       message: 'Job not found.',
     };
+  } else if (checkJobExists.companyId !== ctx.state.user.id) {
+    ctx.status = 403;
+    ctx.body = {
+      message: 'You are not authorized to modify this job.',
+    };
+  } else {
+    const job = await prismaClient.job.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        position,
+        startDate,
+        endDate,
+        numberOfVacancies,
+        experienceLevel,
+        experienceYears,
+        jobType,
+        contractPeriod,
+        salary,
+        location,
+      }
+    });
+
+    ctx.status = 200;
+    ctx.body = {
+      message: 'Job get completed.',
+      data: job,
+    };
   }
-
-  const job = await prismaClient.job.update({
-    where: {
-      id,
-    },
-    data: {
-      title,
-      position,
-      startDate,
-      endDate,
-      numberOfVacancies,
-      experienceLevel,
-      experienceYears,
-      jobType,
-      contractPeriod,
-      salary,
-      location,
-    }
-  });
-
-  ctx.status = 200;
-  ctx.body = {
-    message: 'Job get completed.',
-    data: job,
-  };
 };

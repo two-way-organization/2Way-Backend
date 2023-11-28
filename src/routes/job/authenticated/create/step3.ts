@@ -34,6 +34,13 @@ export const step3 = async (
     ctx.body = {
       message: 'Job not found.',
     };
+    return;
+  } else if (checkJobExists.companyId !== ctx.state.user.id) {
+    ctx.status = 403;
+    ctx.body = {
+      message: 'You are not authorized to update this job.',
+    };
+    return;
   }
 
   const job = await prismaClient.job.update({

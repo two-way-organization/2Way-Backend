@@ -141,9 +141,8 @@ model Application {
 model ApplicationQuestion {
   questionId         Int    @id @default(autoincrement())
   applicationId      Int
-  originalQuestion   String // 직업에 대한 원본 질문
-  applicantResponse  String // 지원자의 원문 답변
-  summarizedResponse String // 지원자의 요약된 답변
+  applicantResponse  String // 원문 답변
+  summarizedResponse String // 요약된 답변
 
   application Application @relation(fields: [applicationId], references: [id])
 

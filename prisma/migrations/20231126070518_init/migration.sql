@@ -136,7 +136,6 @@ CREATE TABLE `Application` (
 CREATE TABLE `ApplicationQuestion` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `applicationId` INTEGER NOT NULL,
-    `originalQuestion` VARCHAR(191) NOT NULL,
     `applicantResponse` VARCHAR(191) NOT NULL,
     `summarizedResponse` VARCHAR(191) NOT NULL,
 

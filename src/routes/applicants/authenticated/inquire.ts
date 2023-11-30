@@ -10,13 +10,11 @@ export interface ErrorResponse {
 }
 
 export interface InfoResponseBody extends Response {
-  profile: {
-    id: number;
-    fullName: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  id: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const inquire = async (
@@ -42,7 +40,7 @@ export const inquire = async (
       message: 'Profile retrieval successful.',
       profile: {
         id: account.id,
-        fullName: account.fullName,
+        name: account.name,
         email: account.email,
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,

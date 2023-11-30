@@ -1,3 +1,4 @@
+// This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -9,106 +10,302 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Applicant {
-  id        Int      @id @default(autoincrement())
-  fullName  String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isActive  Boolean  @default(true)
-
-  applications            Application[]
-  applicantFavorites      ApplicantFavorite[]
-  applicantSkill          ApplicantSkill[]
-  applicantInfo           ApplicantInfo?
-  applicantEducation      ApplicantEducation[]
-  applicantExperience     ApplicantExperience[]
-  applicantQualifications ApplicantQualifications[]
-  applicantProject        ApplicantProject[]
-  jobInterest             JobInterest[]
-  jobViewLog              JobViewLog[]
-  jobFavorite             JobFavorite[]
+enum EducationLevel {
+  HighSchoolGraduate // 고등학교졸업
+  AssociateDegree // 대학졸업(2,3년)
+  BachelorsDegree // 대학교졸업(4년)
+  MastersOrDoctorate // 석/박사
+  EducationNotRequired // 졸업학력무관
 }
 
-model Company {
-  id                 Int      @id @default(autoincrement())
-  companyName        String
-  ceoName            String?
-  hrName             String?
-  registrationNumber String   @unique
-  email              String   @unique
-  password           String
-  isActive           Boolean  @default(true)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-
-  job                  Job[]
-  companyInfo          CompanyInfo?
-  companyCertification CompanyCertification[]
-  companyStatistics    CompanyStatistics?
-  applicantFavorite    ApplicantFavorite[]
-  jobSkill             JobSkill[]
-}
-
-model Job {
-  id                         Int             @id @default(autoincrement())
-  companyId                  Int
-  title                      String
-  position                   String
-  skills                     Json?
-  startDate                  DateTime?
-  endDate                    DateTime?
-  numberOfVacancies          Int             @default(1)
-  experienceLevel            ExperienceLevel @default(Unspecified)
-  experienceYears            String?
-  jobType                    JobType         @default(Regular)
-  contractPeriod             String?
-  salary                     String?
-  location                   String          @default("대한민국")
-  companyIntroduction        String?
-  preferentialTreatment      String?
-  welfareBenefits            String?
-  notice                     String?
-  note                       String?
-  hiringProcess              String?
-  personalStatementQuestions String?
-  requiredDocuments          String?
-  status                     JobStatus       @default(Incomplete)
-  viewCount                  Int             @default(0)
-  applicationCount           Int             @default(0)
-  createdAt                  DateTime        @default(now())
-  updatedAt                  DateTime        @updatedAt
-
-  applications    Application[]
-  jobFavorites    JobFavorite[]
-  company         Company           @relation(fields: [companyId], references: [id])
-  jobTopicDetails JobTopicDetails[]
-  jobSkill        JobSkill[]
-  jobInterest     JobInterest[]
-  jobViewLog      JobViewLog[]
-
-  @@unique([id, companyId])
+enum JobLocation {
+  Seoul // 서울
+  Gyeonggi // 경기
+  Incheon // 인천
+  Daejeon // 대전
+  Sejong // 세종
+  Chungnam // 충남
+  Chungbuk // 충북
+  Gwangju // 광주
+  Jeonnam // 전남
+  Jeonbuk // 전북
+  Daegu // 대구
+  Gyeongbuk // 경북
+  Busan // 부산
+  Ulsan // 울산
+  Gyeongnam // 경남
+  Gangwon // 강원
+  Jeju // 제주
 }
 
 enum ExperienceLevel {
-  Newcomer
-  Experienced
-  Unspecified
+  Newcomer // 경력
+  Experienced // 신입
+  Unspecified // 경력 무관
 }
 
 enum JobType {
-  Regular
-  Contract
-  Intern
+  Regular // 정규직
+  Intern // 인턴
+  ConversionIntern //전환형 인턴
+  Contract // 계약직
+}
+
+enum JobSalary {
+  DecisionAfterTheInterview // 면접 후 결정
+  AccordingToCompanyPolicy // 회사내규에 따름
 }
 
 enum JobStatus {
-  Ongoing
-  Reviewing
-  Waiting
-  Closed
-  Incomplete
+  Ongoing // 진행 중
+  Closed // 마감
+}
+
+enum ApplicationStatus {
+  submitted
+  reviewing
+  interview
+  rejected
+}
+
+model Applicant {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ApplicantResume과의 일대다 관계
+  applicantResume ApplicantResume[]
+
+  // Application과의 일대다 관계
+  application Application[]
+
+  // ApplicantActivity와의 일대다 관계
+  ApplicantActivity ApplicantActivity[]
+
+  // CompanyApplicantFavorite과의 일대다 관계
+  CompanyApplicantFavorite CompanyApplicantFavorite[]
+
+  @@map("Applicant")
+}
+
+model ApplicantResume {
+  id              Int            @id @default(autoincrement())
+  applicantId     Int            @unique
+  gitHubId        String
+  educationLevel  EducationLevel
+  schoolName      String
+  major           String
+  gender          String
+  birth           DateTime
+  address         String
+  totalExperience Int?
+  companyName     String?
+  duties          String?
+
+  // Applicant와의 일대일 관계
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+
+  @@map("ApplicantResume")
+}
+
+model Application {
+  id          Int               @id @default(autoincrement())
+  applicantId Int
+  jobId       Int
+  status      ApplicationStatus
+  appliedAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Applicant와의 일대다 관계
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+
+  // Job와의 일대다 관계
+  job Job @relation(fields: [jobId], references: [id])
+
+  // ApplicationQuestion와의 일대다 관계
+  applicationQuestion ApplicationQuestion[]
+
+  // ApplicationFile와의 일대다 관계
+  applicationFile ApplicationFile[]
+
+  // ApplicantActivity와의 일대다 관계
+  applicantActivity ApplicantActivity[]
+
+  @@map("Application")
+}
+
+model ApplicationQuestion {
+  questionId         Int    @id @default(autoincrement())
+  applicationId      Int
+  originalQuestion   String // 직업에 대한 원본 질문
+  applicantResponse  String // 지원자의 원문 답변
+  summarizedResponse String // 지원자의 요약된 답변
+
+  application Application @relation(fields: [applicationId], references: [id])
+
+  @@map("ApplicationQuestion")
+}
+
+model ApplicationFile {
+  fileId        Int      @id @default(autoincrement())
+  applicationId Int
+  fileType      String
+  filePath      String
+  uploadTime    DateTime
+
+  application Application @relation(fields: [applicationId], references: [id])
+
+  @@map("ApplicationFile")
+}
+
+model ApplicantActivity {
+  id                 Int       @id @default(autoincrement())
+  applicantId        Int
+  jobId              Int?
+  companyId          Int?
+  applicationId      Int?
+  viewedAt           DateTime?
+  jobFavoritedAt     DateTime?
+  companyFavoritedAt DateTime?
+
+  // Applicant와의 일대다 관계
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+
+  // Job와의 일대다 관계
+  job Job? @relation(fields: [jobId], references: [id])
+
+  // Company와의 일대다 관계
+  company Company? @relation(fields: [companyId], references: [id])
+
+  // Application과의 일대다 관계
+  application Application? @relation(fields: [applicationId], references: [id])
+
+  @@map("ApplicantActivity")
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // CompanyInfo와의 일대일 관계
+  companyInfo CompanyInfo?
+
+  // Job과의 일대다 관계
+  job Job[]
+
+  // CompanyApplicantFavorite과의 일대다 관계
+  companyApplicantFavorite CompanyApplicantFavorite[]
+
+  // ApplicantActivity와의 일대다 관계
+  applicantActivity ApplicantActivity[]
+
+  // JobTopicDetails와의 일대다 관계
+  jobTopicDetails JobTopicDetails[]
+
+  // CompanySolution과의 다대다 관계 (중간 테이블 CompanySolution)
+  companySolution CompanySolution[]
+
+  @@map("Company")
+}
+
+model CompanyInfo {
+  id                 Int      @id @default(autoincrement())
+  companyId          Int      @unique
+  companyName        String
+  registrationNumber Int
+  ceoName            String
+  introduction       String?
+  logoUrl            String
+  companyType        String
+  numberOfEmployees  Int
+  capital            Decimal  @db.Decimal(65, 30)
+  establishmentDate  DateTime
+  mainBusiness       String
+
+  // Company와의 일대일 관계
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@map("CompanyInfo")
+}
+
+model Solution {
+  id           Int    @id @default(autoincrement())
+  SolutionName String
+
+  // CompanySolution과의 다대다 관계 (중간 테이블 CompanySolution)
+  companySolution CompanySolution[]
+
+  @@map("Solution")
+}
+
+model CompanySolution {
+  companyId  Int
+  solutionId Int
+
+  // Company와의 다대다 관계 (중간 테이블 CompanySolution)
+  company  Company  @relation(fields: [companyId], references: [id])
+  // Solution과의 다대다 관계 (중간 테이블 CompanySolution)
+  solution Solution @relation(fields: [solutionId], references: [id])
+
+  @@id([companyId, solutionId])
+  @@map("CompanySolution")
+}
+
+model Job {
+  id                        Int             @id @default(autoincrement())
+  companyId                 Int
+  title                     String
+  startDate                 DateTime
+  endDate                   DateTime
+  numberOfVacancies         Int             @default(1)
+  experienceLevel           ExperienceLevel
+  educationLevel            EducationLevel
+  jobType                   JobType
+  salary                    JobSalary
+  location                  JobLocation
+  recruitmentImage          String
+  jobIntroduction           String?
+  responsibilities          String?
+  qualificationRequirements String?
+  preferentialTreatment     String?
+  hiringProcess             String?
+  personalStatementQuestion String
+  requiredDocuments         String
+  status                    JobStatus       @default(Ongoing)
+  viewCount                 Int             @default(0)
+  applicationCount          Int             @default(0)
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+
+  // 해당 테이블와의 일대다 관계
+  company Company @relation(fields: [companyId], references: [id])
+
+  // Application과의 일대다 관계
+  application Application[]
+
+  // ApplicantActivity와의 일대다 관계
+  applicantActivity ApplicantActivity[]
+
+  // JobTopicDetails와의 일대다 관계
+  jobTopicDetails JobTopicDetails[]
+
+  // JobPosition과의 일대다 관계
+  jobPosition JobPosition[]
+
+  // JobSkill과의 일대다 관계
+  jobSkill JobSkill[]
+
+  @@unique([id, companyId])
+  @@map("Job")
 }
 
 model JobTopicDetails {
@@ -120,258 +317,75 @@ model JobTopicDetails {
   responsibilities          String?
   qualificationRequirements String?
 
+  // Company와의 일대다 관계
+  company Company @relation(fields: [companyId], references: [id])
+
+  // Applicant와의 일대다 관계
   job Job @relation(fields: [jobId, companyId], references: [id, companyId])
 
   @@id([jobId, companyId, topic, itemOrder])
+  @@map("JobTopicDetails")
+}
+
+model CompanyApplicantFavorite {
+  id          Int      @id @default(autoincrement())
+  companyId   Int
+  applicantId Int
+  favoritedAt DateTime
+
+  // Company와의 일대다 관계 
+  company Company @relation(fields: [companyId], references: [id])
+
+  // Applicant와의 일대다 관계
+  applicant Applicant @relation(fields: [applicantId], references: [id])
+
+  @@map("CompanyApplicantFavorite")
 }
 
 model Skill {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  itemOrder Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int    @id @default(autoincrement())
+  skillName String @unique
 
-  jobSkill       JobSkill[]
-  applicantSkill ApplicantSkill[]
+  // JobSkill과의 일대다 관계
+  JobSkill JobSkill[]
+
+  @@map("Skill")
+}
+
+model Position {
+  id           Int    @id @default(autoincrement())
+  positionName String @unique
+
+  // JobPosition과의 일대다 관계
+  JobPosition JobPosition[]
+
+  @@map("Position")
+}
+
+model JobPosition {
+  jobId      Int
+  positionId Int
+
+  // Job과의 다대다 관계 (중간 테이블 JobPosition)
+  job Job @relation(fields: [jobId], references: [id])
+
+  // Position과의 다대다 관계 (중간 테이블 JobPosition)
+  position Position @relation(fields: [positionId], references: [id])
+
+  @@id([jobId, positionId])
+  @@map("JobPosition")
 }
 
 model JobSkill {
-  jobId     Int
-  companyId Int
-  skillId   Int
-  itemOrder Int
+  jobId   Int
+  skillId Int
 
-  job     Job     @relation(fields: [jobId], references: [id])
-  company Company @relation(fields: [companyId], references: [id])
-  skill   Skill   @relation(fields: [skillId], references: [id])
+  // Job과의 다대다 관계 (중간 테이블 JobSkill)
+  job Job @relation(fields: [jobId], references: [id])
 
-  @@id([jobId, companyId, skillId])
-}
+  // Skill과의 다대다 관계 (중간 테이블 JobSkill)
+  skill Skill @relation(fields: [skillId], references: [id])
 
-model ApplicantSkill {
-  applicantId Int
-  skillId     Int
-  itemOrder   Int
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  skill     Skill     @relation(fields: [skillId], references: [id])
-
-  @@id([applicantId, skillId])
-}
-
-model JobInterest {
-  applicantId  Int
-  jobId        Int
-  interestedAt DateTime
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  job       Job       @relation(fields: [jobId], references: [id])
-
-  @@id([applicantId, jobId])
-}
-
-model JobViewLog {
-  viewId      Int      @id @default(autoincrement())
-  applicantId Int
-  jobId       Int
-  viewedAt    DateTime
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  job       Job       @relation(fields: [jobId], references: [id])
-}
-
-model Application {
-  id          Int               @id @default(autoincrement())
-  applicantId Int
-  jobId       Int
-  status      ApplicationStatus
-  appliedAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-
-  applicant            Applicant              @relation(fields: [applicantId], references: [id])
-  job                  Job                    @relation(fields: [jobId], references: [id])
-  applicationQuestion  ApplicationQuestion[]
-  applicationFile      ApplicationFile[]
-  jobApplicationStatus JobApplicationStatus[]
-}
-
-model ApplicationQuestion {
-  questionId    Int    @id @default(autoincrement())
-  applicationId Int
-  questionText  String
-  responseText  String
-
-  Application Application @relation(fields: [applicationId], references: [id])
-}
-
-model ApplicationFile {
-  fileId        Int      @id @default(autoincrement())
-  applicationId Int
-  fileType      String
-  filePath      String
-  uploadTime    DateTime
-
-  Application Application @relation(fields: [applicationId], references: [id])
-}
-
-model JobFavorite {
-  favoriteId  Int      @id @default(autoincrement())
-  applicantId Int
-  jobId       Int
-  isFavorite  Boolean
-  favoritedAt DateTime
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-  job       Job       @relation(fields: [jobId], references: [id])
-}
-
-model ApplicantFavorite {
-  favoriteId  Int      @id @default(autoincrement())
-  companyId   Int
-  applicantId Int
-  isFavorite  Boolean
-  favoritedAt DateTime
-
-  company   Company   @relation(fields: [companyId], references: [id])
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-}
-
-model JobApplicationStatus {
-  statusId        Int               @id @default(autoincrement())
-  applicationId   Int
-  status          ApplicationStatus
-  statusChangedAt DateTime
-
-  application Application @relation(fields: [applicationId], references: [id])
-}
-
-enum ApplicationStatus {
-  submitted
-  reviewing
-  interview
-  rejected
-}
-
-model CompanyInfo {
-  id                Int       @id @default(autoincrement())
-  companyId         Int       @unique
-  introduction      String?
-  logoUrl           String?
-  companyType       String?
-  numberOfEmployees Int?
-  capital           Decimal?
-  establishmentDate DateTime?
-  mainBusiness      String?
-
-  company Company @relation(fields: [companyId], references: [id])
-}
-
-model CompanyCertification {
-  id                          Int     @id @default(autoincrement())
-  companyId                   Int
-  registrationNumber          String?
-  registrationCertificatePath String?
-  certificateVerified         Boolean @default(false)
-
-  company Company @relation(fields: [companyId], references: [id])
-}
-
-model CompanyStatistics {
-  id            Int @id @default(autoincrement())
-  companyId     Int @unique
-  viewCount     Int @default(0)
-  interestCount Int @default(0)
-  searchCount   Int @default(0)
-
-  Company Company @relation(fields: [companyId], references: [id])
-}
-
-model ApplicantInfo {
-  id              Int     @id @default(autoincrement())
-  applicantId     Int     @unique
-  fullName        String
-  email           String
-  phone           String
-  gender          String
-  age             Int
-  address         String
-  profileImageUrl String?
-  isComplete      Boolean @default(false)
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-}
-
-model ApplicantEducation {
-  id               Int      @id @default(autoincrement())
-  applicantId      Int
-  educationLevel   String
-  schoolName       String
-  major            String
-  startDate        DateTime
-  endDate          DateTime
-  graduationStatus String
-  isComplete       Boolean  @default(false)
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-}
-
-model ApplicantExperience {
-  id              Int       @id @default(autoincrement())
-  applicantId     Int
-  experienceLevel Boolean   @default(false)
-  companyName     String?
-  position        String?
-  startDate       DateTime?
-  endDate         DateTime?
-  description     String?
-  department      String?
-  duties          String?
-  totalExperience Int?
-  isComplete      Boolean   @default(false)
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-
-  @@unique([applicantId])
-}
-
-enum QualificationType {
-  Certificate
-  Language
-  Award
-  Education
-}
-
-model ApplicantQualifications {
-  id                  Int               @id @default(autoincrement())
-  applicantId         Int
-  qualificationType   QualificationType
-  qualificationName   String?
-  issuingOrganization String?
-  startDate           DateTime?
-  endDate             DateTime?
-  score               String?
-  testName            String?
-  acquisitionDate     DateTime?
-  isComplete          Boolean           @default(false)
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-
-  @@unique([applicantId])
-}
-
-model ApplicantProject {
-  id               Int       @id @default(autoincrement())
-  applicantId      Int
-  projectName      String?
-  organizationName String?
-  startDate        DateTime?
-  endDate          DateTime?
-  description      String?
-  countryName      String?
-  isComplete       Boolean   @default(false)
-
-  applicant Applicant @relation(fields: [applicantId], references: [id])
-
-  @@unique([applicantId])
+  @@id([jobId, skillId])
+  @@map("JobSkill")
 }

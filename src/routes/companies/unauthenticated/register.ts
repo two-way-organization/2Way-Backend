@@ -6,9 +6,7 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 export interface RegisterRequestBody {
-  companyName: string;
-  ceoName: string;
-  registrationNumber: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -24,11 +22,9 @@ export interface RegisterResponseBody {
  * @example
  * request body:
  * {
- *   "email": "<email address>",
+ *   "name": "<name>",
+ *   "email": "<email>",
  *   "password": "<password>",
- *   "companyName": "<company name>",
- *   "ceoName": "<ceo name>",
- *   "registrationNumber": "<registration number>"
  * }
  * successful response body: (201 created)
  * {
@@ -45,7 +41,7 @@ export interface RegisterResponseBody {
 export const register = async (
   ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, unknown, RegisterRequestBody, unknown>, RegisterResponseBody>,
 ) => {
-  const { companyName, ceoName, registrationNumber, email, password } = ctx.request.body;
+  const { name, email, password } = ctx.request.body;
 
   const checkAccountExists = await prismaClient.company.findUnique({
     where: {
@@ -65,11 +61,9 @@ export const register = async (
 
     const data = await prismaClient.company.create({
       data: {
+        name,
         email,
         password: hashedPassword,
-        companyName,
-        ceoName,
-        registrationNumber,
       },
     });
 

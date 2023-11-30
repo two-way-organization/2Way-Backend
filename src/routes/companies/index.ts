@@ -24,12 +24,9 @@ export const unauthenticatedCompanyRoutes = () => {
     register,
     {
       body: z.object({
+        name: z.string(),
         email: z.string().email(),
         password: z.string(),
-        companyName: z.string(),
-        ceoName: z.string(),
-        businessType: z.string(),
-        registrationNumber: z.string(),
       }),
     }
   );

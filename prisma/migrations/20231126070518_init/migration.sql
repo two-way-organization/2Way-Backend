@@ -21,6 +21,7 @@ CREATE TABLE `ApplicantResume` (
     `gender` VARCHAR(191) NOT NULL,
     `birth` DATETIME NOT NULL,
     `address` VARCHAR(191) NOT NULL,
+    `experienceLevel` ENUM('Newcomer', 'Experienced', 'Unspecified') NOT NULL,
     `totalExperience` INTEGER  NULL,
     `companyName` VARCHAR(191)  NULL,
     `duties` VARCHAR(191)  NULL,

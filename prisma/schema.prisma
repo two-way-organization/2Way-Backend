@@ -101,6 +101,7 @@ model ApplicantResume {
   major           String
   gender          String
   birth           DateTime
+  experienceLevel ExperienceLevel
   address         String
   totalExperience Int?
   companyName     String?

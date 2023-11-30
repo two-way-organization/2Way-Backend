@@ -252,7 +252,8 @@ model CompanySolution {
   solutionId Int
 
   // Company와의 다대다 관계 (중간 테이블 CompanySolution)
-  company  Company  @relation(fields: [companyId], references: [id])
+  company Company @relation(fields: [companyId], references: [id])
+
   // Solution과의 다대다 관계 (중간 테이블 CompanySolution)
   solution Solution @relation(fields: [solutionId], references: [id])
 

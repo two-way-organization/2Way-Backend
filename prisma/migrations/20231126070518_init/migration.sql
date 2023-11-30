@@ -39,15 +39,17 @@ CREATE TABLE `Company` (
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE INDEX `Company_email_key`(`email`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `Company_email_key`(`email`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `Solution` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `SolutionName` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`id`)
-)
+    `solutionName` VARCHAR(50) NOT NULL,
+    
+    PRIMARY KEY (`id`),
+    UNIQUE `SolutionName` (`solutionName`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `CompanySolution` (
     `companyId` INTEGER NOT NULL,
@@ -55,8 +57,8 @@ CREATE TABLE `CompanySolution` (
 
     PRIMARY KEY (`companyId`, `solutionId`),
     FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`solutionId`) REFERENCES `SolutionType`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-)
+    FOREIGN KEY (`solutionId`) REFERENCES `Solution`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `CompanyInfo` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -72,8 +74,8 @@ CREATE TABLE `CompanyInfo` (
     `establishmentDate` DATETIME NOT NULL,
     `mainBusiness` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `CompanyInfo_companyId_key`(`companyId`),
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `CompanyInfo_companyId_key`(`companyId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `Job` (

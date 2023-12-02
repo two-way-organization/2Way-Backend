@@ -14,7 +14,6 @@ CREATE TABLE `Applicant` (
 
 -- CreateTable
 CREATE TABLE `ApplicantResume` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `applicantId` INTEGER NOT NULL,
     `gitHubId` VARCHAR(191) NOT NULL,
     `educationLevel` ENUM('HighSchoolGraduate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired') NOT NULL,
@@ -28,8 +27,7 @@ CREATE TABLE `ApplicantResume` (
     `companyName` VARCHAR(191) NULL,
     `duties` VARCHAR(191) NULL,
 
-    UNIQUE INDEX `ApplicantResume_applicantId_key`(`applicantId`),
-    PRIMARY KEY (`id`)
+    UNIQUE INDEX `ApplicantResume_applicantId_key`(`applicantId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -95,7 +93,6 @@ CREATE TABLE `Company` (
 
 -- CreateTable
 CREATE TABLE `CompanyInfo` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `companyId` INTEGER NOT NULL,
     `companyName` VARCHAR(191) NOT NULL,
     `registrationNumber` VARCHAR(191) NOT NULL,
@@ -103,14 +100,13 @@ CREATE TABLE `CompanyInfo` (
     `introduction` VARCHAR(191) NULL,
     `industries` JSON NOT NULL,
     `logoImage` LONGTEXT NOT NULL,
-    `companyType` VARCHAR(191) NOT NULL,
+    `companyType` ENUM('SmallBusiness', 'MediumEnterprise', 'Enterprise') NOT NULL,
     `numberOfEmployees` INTEGER NOT NULL,
     `capital` DECIMAL(65, 30) NOT NULL,
     `establishmentDate` DATETIME(3) NOT NULL,
     `mainBusiness` JSON NOT NULL,
 
-    UNIQUE INDEX `CompanyInfo_companyId_key`(`companyId`),
-    PRIMARY KEY (`id`)
+    UNIQUE INDEX `CompanyInfo_companyId_key`(`companyId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -248,7 +244,7 @@ ALTER TABLE `ApplicantActivity` ADD CONSTRAINT `ApplicantActivity_applicationId_
 ALTER TABLE `CompanyInfo` ADD CONSTRAINT `CompanyInfo_companyId_fkey` FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `CompanySolution` ADD CONSTRAINT `CompanySolution_companyId_fkey` FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `CompanySolution` ADD CONSTRAINT `Company_CompanySolution_fkey` FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `CompanySolution` ADD CONSTRAINT `CompanySolution_solutionId_fkey` FOREIGN KEY (`solutionId`) REFERENCES `Solution`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

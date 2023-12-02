@@ -4,6 +4,7 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { CompanyType } from '@prisma/client';
 
 export interface ErrorResponse {
   message: string;
@@ -17,7 +18,7 @@ export interface InfoResponseBody {
     introduction: string | null;
     industries: string[];
     logoImage: string;
-    companyType: string;
+    companyType: CompanyType;
     numberOfEmployees: number;
     capital: number;
     establishmentDate: Date;

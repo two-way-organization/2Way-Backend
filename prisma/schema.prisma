@@ -61,6 +61,12 @@ enum JobStatus {
   Closed // 마감
 }
 
+enum CompanyType {
+  SmallBusiness // 중소기업
+  MediumEnterprise // 중견기업
+  Enterprise // 대기업
+}
+
 enum ApplicationStatus {
   submitted
   reviewing
@@ -93,7 +99,6 @@ model Applicant {
 }
 
 model ApplicantResume {
-  id              Int            @id @default(autoincrement())
   applicantId     Int            @unique
   gitHubId        String
   educationLevel  EducationLevel
@@ -218,7 +223,6 @@ model Company {
 }
 
 model CompanyInfo {
-  id                 Int      @id @default(autoincrement())
   companyId          Int      @unique
   companyName        String
   registrationNumber String
@@ -226,7 +230,7 @@ model CompanyInfo {
   introduction       String?
   industries         Json
   logoImage          String   @db.LongText
-  companyType        String
+  companyType        CompanyType
   numberOfEmployees  Int
   capital            Decimal  @db.Decimal(65, 30)
   establishmentDate  DateTime
@@ -252,8 +256,8 @@ model CompanySolution {
   companyId  Int
   solutionId Int
 
-  // Company와의 다대다 관계 (중간 테이블 CompanySolution)
-  company Company @relation(fields: [companyId], references: [id])
+  // Company 다대다 관계 (중간 테이블 CompanySolution)
+  Company Company @relation(fields: [companyId], references: [id], map: "Company_CompanySolution_fkey")
 
   // Solution과의 다대다 관계 (중간 테이블 CompanySolution)
   solution Solution @relation(fields: [solutionId], references: [id])

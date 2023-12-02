@@ -1,56 +1,63 @@
+import { JobStatus, type JobLocation, type ExperienceLevel, type JobType, type JobSalary } from '@prisma/client';
+
 import { prismaClient } from '../../../utils/prisma-client';
+
 import type { ParameterizedContext } from 'koa';
-import { JobLocation } from '@prisma/client';
+import type { ZodContext } from 'koa-zod-router';
 
-// 사용자 입력을 JobLocation 열거형으로 매핑하는 함수
-function mapToJobLocation(location: string): JobLocation | undefined {
-    switch (location) {
-        case '서울': return JobLocation.Seoul;
-        case '경기': return JobLocation.Gyeonggi;
-        case '인천': return JobLocation.Incheon;
-        case '대전': return JobLocation.Daejeon;
-        case '세종': return JobLocation.Sejong;
-        case '충남': return JobLocation.Chungnam;
-        case '충북': return JobLocation.Chungbuk;
-        case '광주': return JobLocation.Gwangju;
-        case '전남': return JobLocation.Jeonnam;
-        case '전북': return JobLocation.Jeonbuk;
-        case '대구': return JobLocation.Daegu;
-        case '경북': return JobLocation.Gyeongbuk;
-        case '부산': return JobLocation.Busan;
-        case '울산': return JobLocation.Ulsan;
-        case '경남': return JobLocation.Gyeongnam;
-        case '강원': return JobLocation.Gangwon;
-        case '제주': return JobLocation.Jeju;
-        default: return undefined;
-    }
+export interface SearchRequestQuery {
+  location?: JobLocation;
+  title?: string;
+  jobType?: JobType;
+  experienceLevel?: ExperienceLevel;
+  skills?: string[];
 }
 
-export async function searchJobsByLocations(ctx: ParameterizedContext) {
-    try {
-        // 사용자 입력을 JobLocation 타입으로 변환
-        const locations = (ctx.query.locations as string[])
-            .map(mapToJobLocation)
-            .filter((location): location is JobLocation => location !== undefined);
-
-        const jobs = await prismaClient.job.findMany({
-            where: {
-                location: {
-                    in: locations
-                }   
-            },
-            select: {
-                location: true,
-            }
-        });
-
-        ctx.body = {
-            message: 'Success',
-            data: jobs
-          };
-    } catch (error) {
-        console.error('Error during database query:', error);
-        ctx.status = 500;
-        ctx.body = { message: 'Internal server error' };
-    }
+export interface SearchResponseBody {
+  jobs: {
+    jobId: number;
+    title: string;
+    companyName: string;
+    location: JobLocation;
+    startDate: Date;
+    salary: JobSalary;
+    jobType: JobType;
+    experienceLevel: ExperienceLevel;
+  }[],
 }
+
+export const searchJob = async (
+  ctx: ParameterizedContext<unknown, ZodContext<unknown, unknown, SearchRequestQuery, unknown, unknown>, SearchResponseBody>,
+) => {
+  const { location, title, jobType, experienceLevel, skills } = ctx.request.query;
+
+  const jobs = await prismaClient.job.findMany({
+    where: {
+      status: JobStatus.Ongoing,
+      location,
+      title: {
+        contains: title,
+      },
+      experienceLevel: experienceLevel,
+      jobType: jobType,
+    }
+  });
+
+  ctx.status = 200;
+  ctx.body = {
+    jobs: await Promise.all(jobs.map(async (job) => ({
+      jobId: job.id,
+      title: job.title,
+      companyName: (await prismaClient.companyInfo.findUnique({
+        where: {
+          companyId: job.companyId,
+        },
+      }))!.companyName,
+      location: job.location,
+      startDate: job.startDate,
+      salary: job.salary,
+      jobType: job.jobType,
+      experienceLevel: job.experienceLevel,
+    }))),
+  };
+};

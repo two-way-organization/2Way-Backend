@@ -30,10 +30,6 @@ function main() {
     postFormat: (e, obj) => process.env.NODE_ENV === 'production' ? omit('stack', obj as Record<string, unknown>) : obj as unknown
   }));
 
-  const unauthenticatedJob = unauthenticatedJobRoutes();
-  app.use(unauthenticatedJob.routes());
-  app.use(unauthenticatedJob.allowedMethods());
-
   const unauthenticatedApplicant = unauthenticatedApplicantRoutes();
   const unauthenticatedCompany = unauthenticatedCompanyRoutes();
   const unauthenticatedJob = unauthenticatedJobRoutes();

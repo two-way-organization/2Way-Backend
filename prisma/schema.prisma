@@ -68,10 +68,16 @@ enum CompanyType {
 }
 
 enum ApplicationStatus {
-  submitted // 제출
-  reviewing // 검토 중
-  interview // 인터뷰
-  rejected // 거부
+  Waiting // 지원대기
+  Success // 지원합격
+  Failed // 지원불합격
+}
+
+enum ApplicationResult {
+  Submitted // 제출
+  Reviewing // 검토 중
+  Interview // 인터뷰
+  Rejected // 거부
 }
 
 model Applicant {
@@ -119,12 +125,13 @@ model ApplicantResume {
 }
 
 model Application {
-  id          Int               @id @default(autoincrement())
+  id          Int                @id @default(autoincrement())
   applicantId Int
   jobId       Int
-  status      ApplicationStatus
-  appliedAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  status      ApplicationStatus  @default(Waiting) // 진행 상태
+  result      ApplicationResult? // 최종 결과 (옵션)
+  appliedAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   // Applicant와의 일대다 관계
   applicant Applicant @relation(fields: [applicantId], references: [id])

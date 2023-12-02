@@ -4,8 +4,8 @@ CREATE TABLE `Applicant` (
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
-    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Applicant_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -18,7 +18,7 @@ CREATE TABLE `ApplicantResume` (
     `schoolName` VARCHAR(191) NOT NULL,
     `major` VARCHAR(191) NOT NULL,
     `gender` VARCHAR(191) NOT NULL,
-    `birth` DATETIME NOT NULL,
+    `birth` DATETIME(3) NOT NULL,
     `address` VARCHAR(191) NOT NULL,
     `experienceLevel` ENUM('Newcomer', 'Experienced', 'Unspecified') NOT NULL,
     `totalExperience` INTEGER  NULL,
@@ -36,8 +36,8 @@ CREATE TABLE `Company` (
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
-    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`),
     UNIQUE INDEX `Company_email_key`(`email`)
@@ -82,8 +82,8 @@ CREATE TABLE `Job` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `companyId` INTEGER NOT NULL,
     `title` VARCHAR(191) NOT NULL,
-    `startDate` DATETIME NOT NULL,
-    `endDate` DATETIME NOT NULL,   
+    `startDate` DATETIME(3) NOT NULL,
+    `endDate` DATETIME(3) NOT NULL,   
     `numberOfVacancies` INTEGER NOT NULL DEFAULT 1,
     `experienceLevel` ENUM('Newcomer', 'Experienced', 'Unspecified') NOT NULL,
     `educationLevel` ENUM( 'HighSchoolGraduate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired' ) NOT NULL,
@@ -101,8 +101,8 @@ CREATE TABLE `Job` (
     `status` ENUM('Ongoing', 'Closed') NOT NULL DEFAULT 'Ongoing',
     `viewCount` INTEGER NOT NULL DEFAULT 0,
     `applicationCount` INTEGER NOT NULL DEFAULT 0,
-    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     PRIMARY KEY (`id`),
     FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -119,14 +119,14 @@ CREATE TABLE `JobTopicDetails` (
     PRIMARY KEY (`jobId`, `companyId`, `topic`, `itemOrder`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-
 CREATE TABLE `Application` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` INT NOT NULL AUTO_INCREMENT,
     `applicantId` INT NOT NULL,
-    `jobId` INTEGER NOT NULL,
-    `status` ENUM('submitted', 'reviewing', 'interview', 'rejected') NOT NULL,
-    `appliedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `jobId` INT NOT NULL,
+    `status` ENUM('Waiting', 'Success', 'Failed') NOT NULL DEFAULT 'Waiting',
+    `result` ENUM('Submitted', 'Reviewing', 'Interview', 'Rejected'),
+    `appliedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`),
     FOREIGN KEY (`applicantId`) REFERENCES `Applicant`(`id`),
@@ -148,7 +148,7 @@ CREATE TABLE `ApplicationFile` (
     `applicationId` INTEGER NOT NULL,
     `fileType` VARCHAR(191) NOT NULL,
     `filePath` VARCHAR(191) NOT NULL,
-    `uploadTime` DATETIME NOT NULL,
+    `uploadTime` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`),
     FOREIGN KEY (`applicationId`) REFERENCES `Application`(`id`)
@@ -159,9 +159,9 @@ CREATE TABLE `ApplicantActivity` (
     `applicantId` INTEGER NOT NULL,
     `jobId` INTEGER,
     `companyId` INTEGER,
-    `viewedAt` DATETIME,
-    `jobFavoritedAt` DATETIME,
-    `companyFavoritedAt` DATETIME,
+    `viewedAt` DATETIME(3),
+    `jobFavoritedAt` DATETIME(3),
+    `companyFavoritedAt` DATETIME(3),
 
     PRIMARY KEY (`id`),
     FOREIGN KEY (`applicantId`) REFERENCES `Applicant`(`id`),
@@ -174,7 +174,7 @@ CREATE TABLE `CompanyApplicantFavorite` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `companyId` INTEGER NOT NULL,
     `applicantId` INTEGER NOT NULL,
-    `favoritedAt` DATETIME NOT NULL,
+    `favoritedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`),
     FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`),

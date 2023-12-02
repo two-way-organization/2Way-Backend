@@ -29,7 +29,7 @@ export interface InfoResponseBody extends Response {
     registrationNumber: string;
     ceoName: string;
     introduction: string | null;
-    industries: { solutionId: number; }[];
+    industries: CompanySolutionType[];
     logoImage: string;
     numberOfEmployees: number;
     companyType: string;
@@ -44,7 +44,7 @@ interface CompanyInfoRequestBody {
   registrationNumber: string;
   ceoName: string;
   introduction: string | null;
-  industries: { solutionId: number; }[];
+  industries: CompanySolutionType[];
   logoImage: string;
   numberOfEmployees: number;
   companyType: string;

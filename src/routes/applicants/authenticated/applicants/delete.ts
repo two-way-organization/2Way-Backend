@@ -1,11 +1,12 @@
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
-import type { JwtPayloadState } from '../../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
 export interface DeactivateResponseBody {
+  success: boolean;
   message: string;
 }
 
@@ -24,6 +25,7 @@ export const deregister = async (
   if (!account) {
     ctx.status = 404;
     ctx.body = {
+      success: false,
       message: 'Account not found.',
     };
   } else {
@@ -35,6 +37,7 @@ export const deregister = async (
 
     ctx.status = 200;
     ctx.body = {
+      success: true,
       message: 'Account successfully deactivated.',
     };
   }

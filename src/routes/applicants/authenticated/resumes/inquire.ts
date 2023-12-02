@@ -1,31 +1,27 @@
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
-import type { JwtPayloadState } from '../../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { ApplicantResume } from '@prisma/client';
 
 export interface ErrorResponse {
   message: string;
 }
 
-export interface InfoResponseBody extends Response {
-  id: number;
-  name: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
+export interface InfoResponseBody {
+  profile: ApplicantResume;
 }
 
 export const inquire = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, unknown, unknown>, InfoResponseBody | ErrorResponse>,
 ) => {
-  const { id, email } = ctx.state.user;
+  const { id } = ctx.state.user;
 
-  const account = await prismaClient.applicant.findUnique({
+  const account = await prismaClient.applicantResume.findUnique({
     where: {
       id,
-      email,
     },
   });
 
@@ -38,13 +34,7 @@ export const inquire = async (
     ctx.status = 200;
     ctx.body = {
       message: 'Profile retrieval successful.',
-      profile: {
-        id: account.id,
-        name: account.name,
-        email: account.email,
-        createdAt: account.createdAt,
-        updatedAt: account.updatedAt,
-      },
+      profile: account,
     };
   }
 };

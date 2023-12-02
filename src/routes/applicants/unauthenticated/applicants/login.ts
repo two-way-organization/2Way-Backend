@@ -3,7 +3,7 @@ import { ParameterizedContext } from 'koa';
 import { ZodContext } from 'koa-zod-router';
 import jwt, { type Algorithm } from 'jsonwebtoken';
 
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../utils/prisma-client';
 
 export interface LoginRequestBody {
   email: string;
@@ -49,25 +49,25 @@ export const login = async (
   const { email, password } = ctx.request.body;
 
   // check password
-  const company = await prismaClient.company.findUnique({
+  const applicant = await prismaClient.applicant.findUnique({
     where: {
       email,
     },
   });
 
-  if (company) {
+  if (applicant) {
     const hash = new SHA3(512);
     const hashedPassword = hash.update(password).digest('hex');
 
-    if (hashedPassword === company.password) {
+    if (hashedPassword === applicant.password) {
       ctx.status = 200;
       ctx.body = {
         message: 'Login successful.',
         token: jwt.sign(
           {
-            id: company.id,
-            email: company.email,
-            role: 'company',
+            id: applicant.id,
+            email: applicant.email,
+            role: 'applicant',
           },
           process.env.JWT_SECRET!,
           {

@@ -61,23 +61,11 @@ enum JobStatus {
   Closed // 마감
 }
 
-enum CompanyType {
-  SmallBusiness // 중소기업
-  MediumEnterprise // 중견기업
-  Enterprise // 대기업
-}
-
 enum ApplicationStatus {
-  Waiting // 지원대기
-  Success // 지원합격
-  Failed // 지원불합격
-}
-
-enum ApplicationResult {
-  Submitted // 제출
-  Reviewing // 검토 중
-  Interview // 인터뷰
-  Rejected // 거부
+  submitted
+  reviewing
+  interview
+  rejected
 }
 
 model Applicant {
@@ -105,7 +93,8 @@ model Applicant {
 }
 
 model ApplicantResume {
-  applicantId     Int             @unique
+  id              Int            @id @default(autoincrement())
+  applicantId     Int            @unique
   gitHubId        String
   educationLevel  EducationLevel
   schoolName      String
@@ -125,13 +114,12 @@ model ApplicantResume {
 }
 
 model Application {
-  id          Int                @id @default(autoincrement())
+  id          Int               @id @default(autoincrement())
   applicantId Int
   jobId       Int
-  status      ApplicationStatus  @default(Waiting) // 진행 상태
-  result      ApplicationResult? // 최종 결과 (옵션)
-  appliedAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  status      ApplicationStatus
+  appliedAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   // Applicant와의 일대다 관계
   applicant Applicant @relation(fields: [applicantId], references: [id])
@@ -230,17 +218,19 @@ model Company {
 }
 
 model CompanyInfo {
-  companyId          Int         @unique
+  id                 Int      @id @default(autoincrement())
+  companyId          Int      @unique
   companyName        String
   registrationNumber String
   ceoName            String
   introduction       String?
-  logoImage          String
-  companyType        CompanyType
+  industries         Json
+  logoImage          String   @db.LongText
+  companyType        String
   numberOfEmployees  Int
-  capital            String
+  capital            Decimal  @db.Decimal(65, 30)
   establishmentDate  DateTime
-  mainBusiness       String
+  mainBusiness       Json
 
   // Company와의 일대일 관계
   company Company @relation(fields: [companyId], references: [id])
@@ -262,8 +252,8 @@ model CompanySolution {
   companyId  Int
   solutionId Int
 
-  // Company 다대다 관계 (중간 테이블 CompanySolution)
-  Company Company @relation(fields: [companyId], references: [id], map: "Company_CompanySolution_fkey")
+  // Company와의 다대다 관계 (중간 테이블 CompanySolution)
+  company Company @relation(fields: [companyId], references: [id])
 
   // Solution과의 다대다 관계 (중간 테이블 CompanySolution)
   solution Solution @relation(fields: [solutionId], references: [id])
@@ -284,7 +274,7 @@ model Job {
   jobType                   JobType
   salary                    JobSalary
   location                  JobLocation
-  recruitmentImage          String
+  recruitmentImage          String          @db.LongText
   jobIntroduction           String?
   responsibilities          String?
   qualificationRequirements String?

@@ -36,10 +36,13 @@ function main() {
 
   const unauthenticatedApplicant = unauthenticatedApplicantRoutes();
   const unauthenticatedCompany = unauthenticatedCompanyRoutes();
+  const unauthenticatedJob = unauthenticatedJobRoutes();
   app.use(unauthenticatedApplicant.routes());
   app.use(unauthenticatedApplicant.allowedMethods());
   app.use(unauthenticatedCompany.routes());
   app.use(unauthenticatedCompany.allowedMethods());
+  app.use(unauthenticatedJob.routes());
+  app.use(unauthenticatedJob.allowedMethods());
 
   app.use(jwt({
     secret: process.env.JWT_SECRET!,

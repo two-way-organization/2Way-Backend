@@ -1,14 +1,14 @@
 import { SHA3 } from 'sha3';
 
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
-import type { JwtPayloadState } from '../../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
 export interface ModificationRequestBody {
-  fullName?: string;
+  name?: string;
   email?: string;
   password?: string;
 }
@@ -21,9 +21,9 @@ export interface ModificationResponseBody {
 export const modification = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, ModificationRequestBody, unknown>, ModificationResponseBody>,
 ) => {
-  const { fullName, email, password } = ctx.request.body;
+  const { name, email, password } = ctx.request.body;
 
-  if (!fullName || !email || !password) {
+  if (!name || !email || !password) {
     ctx.status = 400;
     ctx.body = {
       message: 'Missing required field(s).',
@@ -41,7 +41,7 @@ export const modification = async (
         id: ctx.state.user.id,
       },
       data: {
-        fullName,
+        name,
         email,
         password: hashedPassword,
       },

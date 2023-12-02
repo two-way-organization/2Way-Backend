@@ -1,6 +1,6 @@
 import { SHA3 } from 'sha3';
 
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';

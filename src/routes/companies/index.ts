@@ -9,6 +9,8 @@ import { deregister } from './authenticated/deregister';
 import { inquire } from './authenticated/inquire';
 import { modification } from './authenticated/modification';
 import { introduction } from './authenticated/home/introduction';
+import { info, create } from './authenticated/info';
+
 
 import { JwtPayloadState } from '../@types/jwt-payload-state';
 
@@ -72,6 +74,28 @@ export const authenticatedCompanyRoutes = () => {
     }),
   });
   prefixedRouter.get('/home/introduction', introduction);
+
+  // 회사 간편프로필 조회
+  prefixedRouter.get('/info', info);
+  
+  // 회사 간편프로필 등록
+  prefixedRouter.post('/info', create, {
+    body: z.object({
+      companyName: z.string(),
+      registrationNumber: z.string(),
+      ceoName: z.string(),
+      introduction: z.string().nullable().optional(),
+      industries: z.array(z.object({
+        solutionId: z.number()
+      })),
+      logoImage: z.string(),
+      numberOfEmployees: z.number(),
+      companyType: z.string(),
+      capital: z.string(),
+      establishmentDate: z.date(),
+      mainBusiness: z.string()
+    }),
+  });  
 
   return prefixedRouter;
 };

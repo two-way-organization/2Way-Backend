@@ -12,7 +12,7 @@ import cors from '@koa/cors';
 import { authenticatedApplicantRoutes, unauthenticatedApplicantRoutes } from './routes/applicants';
 import { authenticatedCompanyRoutes, unauthenticatedCompanyRoutes } from './routes/companies';
 import { authenticatedUtilsRoutes } from './routes/utils';
-import { authenticatedJobRoutes } from './routes/job';
+import { authenticatedJobRoutes, unauthenticatedJobRoutes } from './routes/job';
 
 const omit = (key: string, obj: Record<string, unknown>) => {
   const { [key]: omitted, ...rest } = obj;
@@ -29,6 +29,10 @@ function main() {
     // Avoid showing the stacktrace in 'production' env
     postFormat: (e, obj) => process.env.NODE_ENV === 'production' ? omit('stack', obj as Record<string, unknown>) : obj as unknown
   }));
+
+  const unauthenticatedJob = unauthenticatedJobRoutes();
+  app.use(unauthenticatedJob.routes());
+  app.use(unauthenticatedJob.allowedMethods());
 
   const unauthenticatedApplicant = unauthenticatedApplicantRoutes();
   const unauthenticatedCompany = unauthenticatedCompanyRoutes();

@@ -1,6 +1,8 @@
 import zodRouter from 'koa-zod-router';
 import { z } from 'zod';
 
+import { searchJobsByLocations } from './unauthenticated/search';
+
 import { step1 } from './authenticated/create/step1';
 import { step2 } from './authenticated/create/step2';
 import { step3 } from './authenticated/create/step3';
@@ -19,6 +21,8 @@ export const unauthenticatedJobRoutes = () => {
       prefix: '/jobs',
     },
   });
+
+  prefixedRouter.get('/search', searchJobsByLocations);
 
   return prefixedRouter;
 };

@@ -12,7 +12,6 @@ CREATE TABLE `Applicant` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `ApplicantResume` (
-    `id` INTEGER AUTO_INCREMENT,
     `applicantId` INTEGER NOT NULL,
     `gitHubId` VARCHAR(191) NOT NULL,
     `educationLevel` ENUM('HighSchoolGraduate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired') NOT NULL,
@@ -27,7 +26,7 @@ CREATE TABLE `ApplicantResume` (
     `duties` VARCHAR(191)  NULL,
 
     UNIQUE INDEX `ApplicantResume_applicantId_key`(`applicantId`),
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`applicantId`),
     FOREIGN KEY (`applicantId`) REFERENCES `Applicant`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -62,20 +61,20 @@ CREATE TABLE `CompanySolution` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE `CompanyInfo` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `companyId` INTEGER NOT NULL,
     `companyName` VARCHAR(191) NOT NULL,
-    `registrationNumber` INTEGER NOT NULL,
+    `registrationNumber` VARCHAR(191) NOT NULL,
     `ceoName` VARCHAR(191) NOT NULL,
     `introduction` VARCHAR(191) NULL,
-    `logoUrl` VARCHAR(191) NOT NULL,
-    `companyType` VARCHAR(191) NOT NULL,
+    `logoImage` VARCHAR(191) NOT NULL,
+    `companyType` ENUM('SmallBusiness', 'MediumEnterprise', 'Enterprise') NOT NULL,
     `numberOfEmployees` INTEGER NOT NULL,
-    `capital` DECIMAL(65, 30) NOT NULL,
-    `establishmentDate` DATETIME NOT NULL,
+    `capital` VARCHAR(191) NOT NULL,
+    `establishmentDate` DATE NOT NULL,
     `mainBusiness` VARCHAR(191) NOT NULL,
 
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`companyId`),
+    FOREIGN KEY (`companyId`) REFERENCES `Company`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE INDEX `CompanyInfo_companyId_key`(`companyId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

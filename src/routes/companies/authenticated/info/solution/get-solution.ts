@@ -4,10 +4,7 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../../@types/jwt-payload-state';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../../@types/error-response';
 
 export interface SolutionGetResponse {
   companyId: number;
@@ -37,10 +34,10 @@ export const getSolution = async (
     ctx.status = 200;
 
     ctx.body = {
-      companyId: account.id,
+      companyId: account.companyId,
       solutions: (await prismaClient.companySolution.findMany({
         where: {
-          companyId: account.id,
+          companyId: account.companyId,
         },
         select: {
           solutionId: true,

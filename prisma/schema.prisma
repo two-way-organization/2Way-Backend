@@ -97,16 +97,17 @@ model Applicant {
   application Application[]
 
   // ApplicantActivity와의 일대다 관계
-  ApplicantActivity ApplicantActivity[]
+  applicantActivity ApplicantActivity[]
 
   // CompanyApplicantFavorite과의 일대다 관계
-  CompanyApplicantFavorite CompanyApplicantFavorite[]
+  companyApplicantFavorite CompanyApplicantFavorite[]
 
   @@map("Applicant")
 }
 
 model ApplicantResume {
   applicantId     Int             @unique
+  baekjoonId      String
   gitHubId        String
   educationLevel  EducationLevel
   schoolName      String
@@ -177,7 +178,7 @@ model ApplicationFile {
 
 model ApplicantActivity {
   id                 Int       @id @default(autoincrement())
-  applicantId        Int
+  applicantId        Int       @unique
   jobId              Int?
   companyId          Int?
   applicationId      Int?
@@ -287,11 +288,7 @@ model Job {
   location                  JobLocation
   recruitmentImage          String          @db.LongText
   jobIntroduction           String?
-  responsibilities          String?
-  qualificationRequirements String?
-  preferentialTreatment     String?
-  hiringProcess             String?
-  personalStatementQuestion String
+  personalStatementQuestion Json
   requiredDocuments         String
   status                    JobStatus       @default(Ongoing)
   viewCount                 Int             @default(0)

@@ -4,10 +4,7 @@ import { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface JobRequestBody {
   jobId: number;
@@ -50,8 +47,16 @@ export const applyJob = async (
     } else {
       const newApplication = await prismaClient.application.create({
         data: {
-          applicantId,
-          jobId,
+          applicant: {
+            connect: {
+              id: applicantId,
+            },
+          },
+          job: {
+            connect: {
+              id: jobId,
+            },
+          },
         },
       });
 

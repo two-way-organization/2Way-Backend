@@ -1,6 +1,5 @@
-interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../../@types/error-response';
+
 interface StatusResponseBody {
   applications: {
     applicationId: number;

@@ -14,6 +14,33 @@ import { inquire } from './authenticated/resumes/inquire';
 import { resumeInexperiencedPut } from './authenticated/resumes/inexperienced/put';
 import { resumeExperiencedPut } from './authenticated/resumes/experienced/put';
 
+import { applyJob } from './authenticated/applications/apply-job';
+import { createCoverLetters } from './authenticated/applications/create-cover-letters';
+import { analyzeCoverLetters } from './authenticated/applications/analyze-cover-letters';
+import { getCoverLetters } from './authenticated/applications/get-cover-letters';
+
+import { waitingApplications } from './authenticated/applications/status/waiting';
+import { preferredApplications } from './authenticated/applications/status/preferred';
+import { successApplications } from './authenticated/applications/status/success';
+import { failedApplications } from './authenticated/applications/status/failed';
+import { deleteApplication } from './authenticated/applications/delete';
+
+import { applicantSetJobFavorite } from './authenticated/jobs/set-favorites';
+import { applicantRemoveJobFavorite } from './authenticated/jobs/unset-favorites';
+import { applicantSetCompanyFavorite } from './authenticated/companies/set-favorites';
+import { applicantRemoveCompanyFavorite } from './authenticated/companies/unset-favorites';
+
+import { applicationsSavedJobs } from './authenticated/saved-jobs';
+
+import { applicantsRecentlyViewed } from './authenticated/recently-viewed';
+
+import { applicationsSavedCompany } from './authenticated/saved-company';
+
+import { applicationsDetails } from '../companies/authenticated/applications/detail';
+
+import type { JwtPayloadState } from '../@types/jwt-payload-state';
+import type { ParameterizedContext } from 'koa';
+
 export const unauthenticatedApplicantRoutes = () => {
   const prefixedRouter = zodRouter({
     koaRouter: {
@@ -57,6 +84,17 @@ export const authenticatedApplicantRoutes = () => {
     },
   });
 
+  prefixedRouter.use(async (ctx: ParameterizedContext<JwtPayloadState>, next) => {
+    if (ctx.path.startsWith('/applicants') && ctx.state.user.role !== 'applicant') {
+      ctx.status = 403;
+      ctx.body = {
+        message: 'Forbidden.',
+      };
+    } else {
+      await next();
+    }
+  });
+
   prefixedRouter.patch('/deactivate', deregister);
   prefixedRouter.patch('/', modification, {
     body: z.object({
@@ -66,10 +104,11 @@ export const authenticatedApplicantRoutes = () => {
     }),
   });
 
-  prefixedRouter.get('/applicants/resumes', inquire);
-  prefixedRouter.put('/applicants/inexperienced', resumeInexperiencedPut, {
+  prefixedRouter.get('/resumes', inquire);
+  prefixedRouter.put('/resumes/inexperienced', resumeInexperiencedPut, {
     body: z.object({
       profile: z.object({
+        baekjoonId: z.string(),
         gitHubId: z.string(),
         educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
         schoolName: z.string(),
@@ -81,9 +120,10 @@ export const authenticatedApplicantRoutes = () => {
       }),
     }),
   });
-  prefixedRouter.put('/applicants/experienced', resumeExperiencedPut, {
+  prefixedRouter.put('/resumes/experienced', resumeExperiencedPut, {
     body: z.object({
       profile: z.object({
+        baekjoonId: z.string(),
         gitHubId: z.string(),
         educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
         schoolName: z.string(),
@@ -98,6 +138,68 @@ export const authenticatedApplicantRoutes = () => {
       }),
     }),
   });
+  prefixedRouter.post('/applications/apply-job', applyJob, {
+    body: z.object({
+      jobId: z.number(),
+    }),
+  });
+  prefixedRouter.put('/applications/:applicationId/cover-letters', createCoverLetters, {
+    params: z.object({
+      applicationId: z.number(),
+    }),
+    body: z.object({
+      questions: z.array(z.object({
+        applicantResponse: z.string(),
+      })),
+    }),
+  });
+  prefixedRouter.post('/applications/:applicationId/cover-letters/analyze', analyzeCoverLetters, {
+    params: z.object({
+      applicationId: z.number(),
+    }),
+  });
+  prefixedRouter.get('/applications/:applicationId/cover-letters', getCoverLetters);
+  prefixedRouter.get('/applications/status/waiting', waitingApplications);
+  prefixedRouter.get('/applications/status/preferred', preferredApplications);
+  prefixedRouter.get('/applications/status/success', successApplications);
+  prefixedRouter.get('/applications/status/failed', failedApplications);
+  prefixedRouter.delete('/applications/:applicationId', deleteApplication, {
+    params: z.object({
+      applicationId: z.number(),
+    }),
+  });
+
+  prefixedRouter.get('/applications/:applicationId/details', applicationsDetails);
+
+  prefixedRouter.post('/jobs/favorites', applicantSetJobFavorite, {
+    body: z.object({
+      jobId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+  prefixedRouter.delete('/jobs/favorites', applicantRemoveJobFavorite, {
+    body: z.object({
+      jobId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+
+  prefixedRouter.post('/companies/favorites', applicantSetCompanyFavorite, {
+    body: z.object({
+      companyId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+  prefixedRouter.delete('/companies/favorites', applicantRemoveCompanyFavorite, {
+    body: z.object({
+      companyId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+
+  prefixedRouter.get('/saved-jobs', applicationsSavedJobs);
+  prefixedRouter.get('/recently-viewed', applicantsRecentlyViewed);
+  prefixedRouter.get('/saved-company', applicationsSavedCompany);
 
   return prefixedRouter;
 };

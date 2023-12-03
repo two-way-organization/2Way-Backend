@@ -9,7 +9,7 @@ import type { JwtPayloadState } from '../../@types/jwt-payload-state';
 
 export interface ModificationRequestBody {
   companyName?: string,
-  hrName?: string,
+  email?: string,
   password?: string,
 }
 
@@ -21,9 +21,9 @@ export interface ModificationResponseBody {
 export const modification = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, ModificationRequestBody, unknown>, ModificationResponseBody>,
 ) => {
-  const { companyName, hrName, password } = ctx.request.body;
+  const { companyName, email, password } = ctx.request.body;
 
-  if (!companyName || !hrName || !password) {
+  if (!companyName && !email && !password) {
     ctx.status = 400;
     ctx.body = {
       message: 'Missing required field(s).',
@@ -41,8 +41,8 @@ export const modification = async (
         id: ctx.state.user.id,
       },
       data: {
-        companyName,
-        hrName,
+        name: companyName,
+        email,
         password: hashedPassword,
       },
     });

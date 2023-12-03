@@ -40,6 +40,15 @@ export const searchJob = async (
       },
       experienceLevel: experienceLevel,
       jobType: jobType,
+      jobSkill: {
+        some: {
+          skill: {
+            skillName: {
+              in: skills,
+            }
+          },
+        },
+      },
     }
   });
 

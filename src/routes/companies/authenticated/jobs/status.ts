@@ -6,10 +6,7 @@ import type { ZodContext } from 'koa-zod-router';
 import type { ParameterizedContext } from 'koa';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface StatusRequestBody {
   jobId: number;

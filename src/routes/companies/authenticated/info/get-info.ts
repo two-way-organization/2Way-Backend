@@ -6,10 +6,7 @@ import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 import type { CompanyType } from '@prisma/client';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface InfoResponseBody {
   profile: {

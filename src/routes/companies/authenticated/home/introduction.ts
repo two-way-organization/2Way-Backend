@@ -4,15 +4,12 @@ import type { ZodContext } from 'koa-zod-router';
 import type { ParameterizedContext } from 'koa';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface IntroductionResponseBody {
   companyName: string;
   introduction: (string | null);
   ceoName: string;
-}
-
-export interface ErrorResponse {
-  message: string;
 }
 
 export const introduction = async (

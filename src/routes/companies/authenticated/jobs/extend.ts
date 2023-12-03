@@ -4,10 +4,7 @@ import { JwtPayloadState } from '../../../@types/jwt-payload-state';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface ExtendJobRequestBody {
   jobId: number;

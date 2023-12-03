@@ -4,10 +4,8 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
-
-export interface ErrorResponse {
-  message: string;
-}
+import type { JobTopicDetail } from './types';
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface GetRequestParams {
   jobId: number;
@@ -29,11 +27,11 @@ export interface GetResponseBody {
     location: string;
     recruitmentImage: string;
     jobIntroduction: string | null;
-    responsibilities: string | null;
-    qualificationRequirements: string | null;
-    preferentialTreatment: string | null;
-    hiringProcess: string | null;
-    personalStatementQuestion: string;
+    responsibilities: JobTopicDetail[];
+    qualificationRequirements: JobTopicDetail[];
+    preferentialTreatment: JobTopicDetail[];
+    hiringProcess: JobTopicDetail[];
+    personalStatementQuestion: string[];
     requiredDocuments: string;
     skills: string[];
     jobFavoritedAt: (Date | null)[];
@@ -78,10 +76,7 @@ export const getJob = async (
       location: true,
       recruitmentImage: true,
       jobIntroduction: true,
-      responsibilities: true,
-      qualificationRequirements: true,
-      preferentialTreatment: true,
-      hiringProcess: true,
+      jobTopicDetails: true,
       personalStatementQuestion: true,
       requiredDocuments: true,
       jobSkill: true,
@@ -128,11 +123,11 @@ export const getJob = async (
         location: job.location,
         recruitmentImage: job.recruitmentImage,
         jobIntroduction: job.jobIntroduction,
-        responsibilities: job.responsibilities,
-        qualificationRequirements: job.qualificationRequirements,
-        preferentialTreatment: job.preferentialTreatment,
-        hiringProcess: job.hiringProcess,
-        personalStatementQuestion: job.personalStatementQuestion,
+        responsibilities: job.jobTopicDetails.filter((it) => it.topic === 'responsibilities'),
+        qualificationRequirements: job.jobTopicDetails.filter((it) => it.topic === 'qualificationRequirements'),
+        preferentialTreatment: job.jobTopicDetails.filter((it) => it.topic === 'preferentialTreatment'),
+        hiringProcess: job.jobTopicDetails.filter((it) => it.topic === 'hiringProcess'),
+        personalStatementQuestion: (job.personalStatementQuestion as { data: string[] }).data,
         requiredDocuments: job.requiredDocuments,
         skills: await Promise.all(job.jobSkill.map(async (skill) => {
           return (await prismaClient.skill.findUnique({

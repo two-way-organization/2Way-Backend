@@ -58,14 +58,15 @@ export const createInfo = async (
 
     await prismaClient.companyInfo.create({
       data: {
-        companyId: id,
+        company: {
+          connect: {
+            id: account.id,
+          },
+        },
         companyName: profile.companyName,
         registrationNumber: profile.registrationNumber,
         ceoName: profile.ceoName,
         introduction: profile.introduction,
-        industries: profile.industries.map(({ solutionId }) => ({
-          solutionId,
-        })),
         logoImage: profile.logoImage,
         companyType: profile.companyType,
         numberOfEmployees: profile.numberOfEmployees,

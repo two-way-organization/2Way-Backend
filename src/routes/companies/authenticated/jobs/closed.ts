@@ -6,14 +6,11 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface ClosedGetRequestQuery {
   page: number;
   pageSize: number;
-}
-
-export interface ErrorResponse {
-  message: string;
 }
 
 export interface ClosedGetResponse {

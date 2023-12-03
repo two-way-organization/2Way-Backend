@@ -7,6 +7,7 @@ import { JwtPayloadState } from '../../../@types/jwt-payload-state';
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 import type { JobType, JobSalary, JobLocation, EducationLevel, ExperienceLevel } from '@prisma/client';
+import type { JobTopicDetail } from './types';
 
 interface JobCreateRequestBody {
   title: string;
@@ -22,12 +23,12 @@ interface JobCreateRequestBody {
   location: JobLocation;
   recruitmentImage: string;
   jobIntroduction: string;
-  responsibilities: string;
-  preferentialTreatment: string;
-  hiringProcess: string;
-  personalStatementQuestion: string;
+  responsibilities: JobTopicDetail[];
+  preferentialTreatment: JobTopicDetail[];
+  hiringProcess: JobTopicDetail[];
+  qualificationRequirements: JobTopicDetail[];
+  personalStatementQuestion: string[];
   requiredDocuments: string;
-  qualificationRequirements: string;
 }
 
 interface JobCreateResponseBody {
@@ -99,12 +100,31 @@ export const createJob = async (
       location,
       recruitmentImage,
       jobIntroduction,
-      responsibilities,
-      preferentialTreatment,
-      hiringProcess,
-      personalStatementQuestion,
+      jobTopicDetails: {
+        createMany: {
+          data: responsibilities.map((responsibility) => ({
+            topic: 'responsibilities',
+            detail: responsibility.detail,
+            itemOrder: responsibility.itemOrder,
+          })).concat(qualificationRequirements.map((it) => ({
+            topic: 'qualificationRequirements',
+            detail: it.detail,
+            itemOrder: it.itemOrder,
+          }))).concat(preferentialTreatment.map((preferential) => ({
+            topic: 'preferentialTreatment',
+            detail: preferential.detail,
+            itemOrder: preferential.itemOrder,
+          }))).concat(hiringProcess.map((hiring) => ({
+            topic: 'hiringProcess',
+            detail: hiring.detail,
+            itemOrder: hiring.itemOrder,
+          })))
+        },
+      },
+      personalStatementQuestion: {
+        data: personalStatementQuestion,
+      },
       requiredDocuments,
-      qualificationRequirements,
     },
   });
 

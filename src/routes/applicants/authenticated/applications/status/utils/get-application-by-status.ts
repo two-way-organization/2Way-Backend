@@ -8,7 +8,7 @@ export const getApplicationByStatus = async (
 ) => await prismaClient.application.findMany({
   where: {
     applicantId,
-    status: ApplicationStatus.Preferred,
+    status: status,
   },
   orderBy: {
     updatedAt: 'desc',

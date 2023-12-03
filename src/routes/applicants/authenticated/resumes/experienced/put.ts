@@ -8,6 +8,7 @@ import type { EducationLevel, ExperienceLevel } from '@prisma/client';
 
 export interface ExperiencedPutRequestBody {
   profile: {
+    baekjoonId: string;
     gitHubId: string;
     educationLevel: EducationLevel;
     schoolName: string,
@@ -48,7 +49,12 @@ export const resumeExperiencedPut = async (
   } else {
     await prismaClient.applicantResume.create({
       data: {
-        applicantId: account.id,
+        applicant: {
+          connect: {
+            id: account.id,
+          },
+        },
+        baekjoonId: profile.baekjoonId,
         gitHubId: profile.gitHubId,
         educationLevel: profile.educationLevel,
         schoolName: profile.schoolName,

@@ -23,6 +23,13 @@ import { deleteJob } from './authenticated/jobs/delete';
 import { statusJob } from './authenticated/jobs/status';
 import { getJob } from './authenticated/jobs/get-job';
 
+import { addFavoriteApplicant } from './authenticated/jobs/applicants/add-favorite';
+import { removeFavoriteApplicant } from './authenticated/jobs/applicants/remove-favorite';
+
+import { waitingCompanies } from './authenticated/jobs/applicants/status/waiting';
+import { successCompanies } from './authenticated/jobs/applicants/status/success';
+import { failedCompanies } from './authenticated/jobs/applicants/status/failed';
+
 import type { JwtPayloadState } from '../@types/jwt-payload-state';
 
 export const unauthenticatedCompanyRoutes = () => {
@@ -66,20 +73,21 @@ export const authenticatedCompanyRoutes = () => {
   });
 
   prefixedRouter.use(async (ctx: ParameterizedContext<JwtPayloadState>, next) => {
-    if (ctx.state.user.role !== 'company') {
+    if (ctx.path.startsWith('/companies') && ctx.state.user.role !== 'company') {
       ctx.status = 403;
       ctx.body = {
         message: 'Forbidden.',
       };
+    } else {
+      await next();
     }
-    await next();
   });
 
   prefixedRouter.delete('/', deregister);
   prefixedRouter.patch('/', modification, {
     body: z.object({
       companyName: z.string().optional(),
-      hrName: z.string().optional(),
+      email: z.string().optional(),
       password: z.string().optional(),
     }),
   });
@@ -160,14 +168,41 @@ export const authenticatedCompanyRoutes = () => {
       location: z.enum(['Seoul', 'Busan', 'Daegu', 'Incheon', 'Gwangju', 'Daejeon', 'Ulsan', 'Sejong', 'Gyeonggi', 'Gangwon', 'Chungbuk', 'Chungnam', 'Jeonbuk', 'Jeonnam', 'Gyeongbuk', 'Gyeongnam', 'Jeju']),
       recruitmentImage: z.string(),
       jobIntroduction: z.string(),
-      responsibilities: z.string(),
-      preferentialTreatment: z.string(),
-      hiringProcess: z.string(),
-      personalStatementQuestion: z.string(),
+      responsibilities: z.array(z.object({
+        detail: z.string(),
+        itemOrder: z.number(),
+      })),
+      preferentialTreatment: z.array(z.object({
+        itemOrder: z.number(),
+        detail: z.string(),
+      })),
+      qualificationRequirements: z.array(z.object({
+        itemOrder: z.number(),
+        detail: z.string(),
+      })),
+      hiringProcess: z.array(z.object({
+        itemOrder: z.number(),
+        detail: z.string(),
+      })),
+      personalStatementQuestion: z.array(z.string()),
       requiredDocuments: z.string(),
-      qualificationRequirements: z.string(),
     }),
   });
+  prefixedRouter.post('/jobs/applicants/favorite', addFavoriteApplicant, {
+    body: z.object({
+      jobId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+  prefixedRouter.delete('/jobs/applicants/favorite', removeFavoriteApplicant, {
+    body: z.object({
+      jobId: z.number(),
+      applicantId: z.number(),
+    }),
+  });
+  prefixedRouter.get('/jobs/:jobId/applicants/status/waiting', waitingCompanies);
+  prefixedRouter.get('/jobs/:jobId/applicants/status/success', successCompanies);
+  prefixedRouter.get('/jobs/:jobId/applicants/status/failed', failedCompanies);
 
   return prefixedRouter;
 };

@@ -15,6 +15,7 @@ CREATE TABLE `Applicant` (
 -- CreateTable
 CREATE TABLE `ApplicantResume` (
     `applicantId` INTEGER NOT NULL,
+    `baekjoonId` VARCHAR(191) NOT NULL,
     `gitHubId` VARCHAR(191) NOT NULL,
     `educationLevel` ENUM('HighSchoolGraduate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired') NOT NULL,
     `schoolName` VARCHAR(191) NOT NULL,
@@ -77,6 +78,7 @@ CREATE TABLE `ApplicantActivity` (
     `jobFavoritedAt` DATETIME(3) NULL,
     `companyFavoritedAt` DATETIME(3) NULL,
 
+    UNIQUE INDEX `ApplicantActivity_applicantId_key`(`applicantId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -142,11 +144,7 @@ CREATE TABLE `Job` (
     `location` ENUM('Seoul', 'Gyeonggi', 'Incheon', 'Daejeon', 'Sejong', 'Chungnam', 'Chungbuk', 'Gwangju', 'Jeonnam', 'Jeonbuk', 'Daegu', 'Gyeongbuk', 'Busan', 'Ulsan', 'Gyeongnam', 'Gangwon', 'Jeju') NOT NULL,
     `recruitmentImage` LONGTEXT NOT NULL,
     `jobIntroduction` VARCHAR(191) NULL,
-    `responsibilities` VARCHAR(191) NULL,
-    `qualificationRequirements` VARCHAR(191) NULL,
-    `preferentialTreatment` VARCHAR(191) NULL,
-    `hiringProcess` VARCHAR(191) NULL,
-    `personalStatementQuestion` VARCHAR(191) NOT NULL,
+    `personalStatementQuestion` JSON NOT NULL,
     `requiredDocuments` VARCHAR(191) NOT NULL,
     `status` ENUM('Ongoing', 'Closed') NOT NULL DEFAULT 'Ongoing',
     `viewCount` INTEGER NOT NULL DEFAULT 0,

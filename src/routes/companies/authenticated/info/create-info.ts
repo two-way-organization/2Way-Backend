@@ -4,6 +4,8 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { CompanyType } from '@prisma/client';
+import type { CompanySolutionType } from './types';
 
 export interface CompanyInfoCreateRequestBody {
   profile: {
@@ -11,9 +13,9 @@ export interface CompanyInfoCreateRequestBody {
     companyName: string;
     ceoName: string;
     introduction?: string;
-    industries: string[];
+    industries: CompanySolutionType[];
     logoImage: string;
-    companyType: string;
+    companyType: CompanyType;
     numberOfEmployees: number;
     capital: number;
     establishmentDate: Date;
@@ -45,6 +47,15 @@ export const createInfo = async (
       message: 'Account not found.',
     };
   } else {
+    for await (const industry of profile.industries) {
+      await prismaClient.companySolution.create({
+        data: {
+          companyId: id,
+          solutionId: industry.solutionId,
+        },
+      });
+    }
+
     await prismaClient.companyInfo.create({
       data: {
         companyId: id,
@@ -52,9 +63,9 @@ export const createInfo = async (
         registrationNumber: profile.registrationNumber,
         ceoName: profile.ceoName,
         introduction: profile.introduction,
-        industries: {
-          data: profile.industries,
-        },
+        industries: profile.industries.map(({ solutionId }) => ({
+          solutionId,
+        })),
         logoImage: profile.logoImage,
         companyType: profile.companyType,
         numberOfEmployees: profile.numberOfEmployees,

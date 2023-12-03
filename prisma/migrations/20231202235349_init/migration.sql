@@ -35,7 +35,8 @@ CREATE TABLE `Application` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `applicantId` INTEGER NOT NULL,
     `jobId` INTEGER NOT NULL,
-    `status` ENUM('submitted', 'reviewing', 'interview', 'rejected') NOT NULL,
+    `status` ENUM('Waiting', 'Success', 'Failed') NOT NULL DEFAULT 'Waiting',
+    `result` ENUM('Submitted', 'Reviewing', 'Interview', 'Rejected') NULL,
     `appliedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 

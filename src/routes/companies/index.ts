@@ -6,8 +6,6 @@ import { ParameterizedContext } from 'koa';
 import { deregister } from './authenticated/deregister';
 import { modification } from './authenticated/modification';
 import { introduction } from './authenticated/home/introduction';
-import { info, create } from './authenticated/info';
-
 
 import { register } from './unauthenticated/companies/register';
 import { login } from './unauthenticated/companies/login';
@@ -93,7 +91,9 @@ export const authenticatedCompanyRoutes = () => {
         companyName: z.string(),
         ceoName: z.string(),
         introduction: z.string().optional(),
-        industries: z.array(z.string()),
+        industries: z.array(z.object({
+          solutionId: z.number(),
+        })),
         logoImage: z.string(),
         companyType: z.enum(['SmallBusiness', 'MediumEnterprise', 'Enterprise']),
         numberOfEmployees: z.number(),
@@ -168,28 +168,6 @@ export const authenticatedCompanyRoutes = () => {
       qualificationRequirements: z.string(),
     }),
   });
-
-  // 회사 간편프로필 조회
-  prefixedRouter.get('/info', info);
-  
-  // 회사 간편프로필 등록
-  prefixedRouter.post('/info', create, {
-    body: z.object({
-      companyName: z.string(),
-      registrationNumber: z.string(),
-      ceoName: z.string(),
-      introduction: z.string().nullable().optional(),
-      industries: z.array(z.object({
-        solutionId: z.number()
-      })),
-      logoImage: z.string(),
-      numberOfEmployees: z.number(),
-      companyType: z.string(),
-      capital: z.string(),
-      establishmentDate: z.date(),
-      mainBusiness: z.string()
-    }),
-  });  
 
   return prefixedRouter;
 };

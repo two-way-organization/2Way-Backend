@@ -1,5 +1,6 @@
 import { prismaClient } from '../../../../utils/prisma-client';
 
+import type { CompanySolutionType } from './types';
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
@@ -16,7 +17,7 @@ export interface InfoResponseBody {
     registrationNumber: string;
     ceoName: string;
     introduction: string | null;
-    industries: string[];
+    industries: CompanySolutionType[];
     logoImage: string;
     companyType: CompanyType;
     numberOfEmployees: number;
@@ -35,6 +36,13 @@ export const getInfo = async (
     where: {
       companyId: id,
     },
+    include: {
+      company: {
+        select: {
+          companySolution: true,
+        },
+      },
+    },
   });
 
   if (!account) {
@@ -51,7 +59,9 @@ export const getInfo = async (
         registrationNumber: account.registrationNumber,
         ceoName: account.ceoName,
         introduction: account.introduction,
-        industries: (account.industries as { data: string[] }).data,
+        industries: account.company.companySolution.map((solution) => ({
+          solutionId: solution.solutionId,
+        })),
         logoImage: account.logoImage,
         companyType: account.companyType,
         numberOfEmployees: account.numberOfEmployees,

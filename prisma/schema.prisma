@@ -69,6 +69,7 @@ enum CompanyType {
 
 enum ApplicationStatus {
   Waiting // 지원대기
+  Preferred // 선호상태
   Success // 지원합격
   Failed // 지원불합격
 }

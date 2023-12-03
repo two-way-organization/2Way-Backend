@@ -342,9 +342,9 @@ model JobTopicDetails {
 
 model CompanyApplicantFavorite {
   id          Int      @id @default(autoincrement())
-  companyId   Int
-  applicantId Int
-  favoritedAt DateTime
+  companyId   Int      @unique
+  applicantId Int      @unique
+  favoritedAt DateTime @default(now())
 
   // Company와의 일대다 관계 
   company Company @relation(fields: [companyId], references: [id])

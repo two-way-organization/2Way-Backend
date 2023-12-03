@@ -35,11 +35,13 @@ CREATE TABLE `Application` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `applicantId` INTEGER NOT NULL,
     `jobId` INTEGER NOT NULL,
-    `status` ENUM('Waiting', 'Success', 'Failed') NOT NULL DEFAULT 'Waiting',
+    `status` ENUM('Waiting', 'Preferred', 'Success', 'Failed') NOT NULL DEFAULT 'Waiting',
     `result` ENUM('Submitted', 'Reviewing', 'Interview', 'Rejected') NULL,
     `appliedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `Application_applicantId_key`(`applicantId`),
+    UNIQUE INDEX `Application_jobId_key`(`jobId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -99,7 +101,6 @@ CREATE TABLE `CompanyInfo` (
     `registrationNumber` VARCHAR(191) NOT NULL,
     `ceoName` VARCHAR(191) NOT NULL,
     `introduction` VARCHAR(191) NULL,
-    `industries` JSON NOT NULL,
     `logoImage` LONGTEXT NOT NULL,
     `companyType` ENUM('SmallBusiness', 'MediumEnterprise', 'Enterprise') NOT NULL,
     `numberOfEmployees` INTEGER NOT NULL,
@@ -175,8 +176,10 @@ CREATE TABLE `CompanyApplicantFavorite` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `companyId` INTEGER NOT NULL,
     `applicantId` INTEGER NOT NULL,
-    `favoritedAt` DATETIME(3) NOT NULL,
+    `favoritedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `CompanyApplicantFavorite_companyId_key`(`companyId`),
+    UNIQUE INDEX `CompanyApplicantFavorite_applicantId_key`(`applicantId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

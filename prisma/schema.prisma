@@ -126,8 +126,8 @@ model ApplicantResume {
 
 model Application {
   id          Int                @id @default(autoincrement())
-  applicantId Int
-  jobId       Int
+  applicantId Int                @unique
+  jobId       Int                @unique
   status      ApplicationStatus  @default(Waiting) // 진행 상태
   result      ApplicationResult? // 최종 결과 (옵션)
   appliedAt   DateTime           @default(now())

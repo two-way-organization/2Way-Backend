@@ -65,4 +65,13 @@ export const inquiryJob = async (
   ctx.body = {
     job,
   };
+
+  await prismaClient.job.update({
+    where: {
+      id: jobId,
+    },
+    data: {
+      viewCount: job.viewCount + 1,
+    },
+  });
 };

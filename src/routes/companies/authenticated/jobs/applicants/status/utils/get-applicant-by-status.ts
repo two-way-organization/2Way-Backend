@@ -26,6 +26,9 @@ export const getApplicantByStatus = async (jobId: number, companyId: number, app
       where: {
         companyId,
       },
+      orderBy: {
+        favoritedAt: 'desc',
+      },
       take: 1,
     },
   },

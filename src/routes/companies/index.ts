@@ -21,7 +21,6 @@ import { createJob } from './authenticated/jobs/step';
 import { extendJob } from './authenticated/jobs/extend';
 import { deleteJob } from './authenticated/jobs/delete';
 import { statusJob } from './authenticated/jobs/status';
-import { getJob } from './authenticated/jobs/get-job';
 
 import { addFavoriteApplicant } from './authenticated/jobs/applicants/add-favorite';
 import { removeFavoriteApplicant } from './authenticated/jobs/applicants/remove-favorite';
@@ -139,11 +138,6 @@ export const authenticatedCompanyRoutes = () => {
     body: z.object({
       jobId: z.number(),
       status: z.enum(['Ongoing', 'Closed']),
-    }),
-  });
-  prefixedRouter.get('/jobs/:jobId', getJob, {
-    params: z.object({
-      jobId: z.number(),
     }),
   });
   prefixedRouter.put('/jobs/solution', createSolution, {

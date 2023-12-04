@@ -16,6 +16,7 @@ import { resumeInexperiencedPut } from './authenticated/resumes/inexperienced/pu
 import { resumeExperiencedPut } from './authenticated/resumes/experienced/put';
 
 import { applyJob } from './authenticated/applications/apply-job';
+import { getJob } from './authenticated/jobs/get-job';
 import { createCoverLetters } from './authenticated/applications/create-cover-letters';
 import { analyzeCoverLetters } from './authenticated/applications/analyze-cover-letters';
 import { getCoverLetters } from './authenticated/applications/get-cover-letters';
@@ -206,6 +207,11 @@ export const authenticatedApplicantRoutes = () => {
       jobType: z.enum(['Regular', 'Contract', 'Intern']),
       experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),
       skills: z.array(z.string()),
+    }),
+  });
+  prefixedRouter.get('/jobs/:jobId', getJob, {
+    params: z.object({
+      jobId: z.number(),
     }),
   });
 

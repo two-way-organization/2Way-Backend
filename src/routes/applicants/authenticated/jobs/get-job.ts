@@ -4,7 +4,7 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
-import type { JobTopicDetail } from './types';
+import type { JobTopicDetail } from '../../../companies/authenticated/jobs/types';
 import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface GetRequestParams {
@@ -33,8 +33,10 @@ export interface GetResponseBody {
     hiringProcess: JobTopicDetail[];
     personalStatementQuestion: string[];
     requiredDocuments: string;
+    viewCount: number;
     skills: string[];
     jobFavoritedAt: (Date | null)[];
+    companyFavoritedAt: (Date | null)[];
   },
   profile: {
     companyName: string;
@@ -53,13 +55,12 @@ export interface GetResponseBody {
 export const getJob = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, GetRequestParams, unknown, unknown, unknown>, ErrorResponse | GetResponseBody>,
 ) => {
-  const { id: companyId } = ctx.state.user;
+  const { id: applicantId } = ctx.state.user;
   const { jobId } = ctx.request.params;
 
   const job = await prismaClient.job.findUnique({
     where: {
       id: jobId,
-      companyId,
     },
     select: {
       id: true,
@@ -79,8 +80,30 @@ export const getJob = async (
       jobTopicDetails: true,
       personalStatementQuestion: true,
       requiredDocuments: true,
-      jobSkill: true,
-      applicantActivity: true,
+      viewCount: true,
+      jobSkill: {
+        where: {
+          jobId,
+        },
+        select: {
+          skillId: true,
+        },
+      },
+      // get one activity
+      applicantActivity: {
+        where: {
+          applicantId,
+          jobId,
+        },
+        orderBy: {
+          viewedAt: 'desc',
+        },
+        take: 1,
+        select: {
+          jobFavoritedAt: true,
+          companyFavoritedAt: true,
+        },
+      },
     }
   });
 
@@ -129,6 +152,7 @@ export const getJob = async (
         hiringProcess: job.jobTopicDetails.filter((it) => it.topic === 'hiringProcess'),
         personalStatementQuestion: (job.personalStatementQuestion as { data: string[] }).data,
         requiredDocuments: job.requiredDocuments,
+        viewCount: job.viewCount,
         skills: await Promise.all(job.jobSkill.map(async (skill) => {
           return (await prismaClient.skill.findUnique({
             where: {
@@ -140,6 +164,7 @@ export const getJob = async (
           }))!.skillName;
         })),
         jobFavoritedAt: job.applicantActivity.map((activity) => activity.jobFavoritedAt),
+        companyFavoritedAt: job.applicantActivity.map((activity) => activity.companyFavoritedAt),
       },
       profile: {
         companyName: companyInfo.companyName,
@@ -154,5 +179,14 @@ export const getJob = async (
         mainBusiness: (companyInfo.mainBusiness as { data: string[] }).data,
       },
     };
+
+    await prismaClient.job.update({
+      where: {
+        id: jobId,
+      },
+      data: {
+        viewCount: job.viewCount + 1,
+      },
+    });
   }
 };

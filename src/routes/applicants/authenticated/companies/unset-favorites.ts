@@ -28,10 +28,13 @@ export const applicantRemoveCompanyFavorite = async (
   });
 
   if (existData) {
-    await prismaClient.applicantActivity.delete({
+    await prismaClient.applicantActivity.update({
       where: {
         applicantId,
         companyId,
+      },
+      data: {
+        companyFavoritedAt: null,
       },
     });
   }

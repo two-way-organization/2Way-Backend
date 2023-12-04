@@ -167,26 +167,26 @@ export const authenticatedApplicantRoutes = () => {
 
   prefixedRouter.get('/applications/:applicationId/details', applicationsDetails);
 
-  prefixedRouter.post('/jobs/favorites', applicantSetJobFavorite, {
+  prefixedRouter.put('/jobs/favorites', applicantSetJobFavorite, {
     body: z.object({
       jobId: z.number(),
       applicantId: z.number(),
     }),
   });
-  prefixedRouter.delete('/jobs/favorites', applicantRemoveJobFavorite, {
+  prefixedRouter.put('/jobs/favorites', applicantRemoveJobFavorite, {
     body: z.object({
       jobId: z.number(),
       applicantId: z.number(),
     }),
   });
 
-  prefixedRouter.post('/companies/favorites', applicantSetCompanyFavorite, {
+  prefixedRouter.put('/companies/favorites', applicantSetCompanyFavorite, {
     body: z.object({
       companyId: z.number(),
       applicantId: z.number(),
     }),
   });
-  prefixedRouter.delete('/companies/favorites', applicantRemoveCompanyFavorite, {
+  prefixedRouter.put('/companies/favorites', applicantRemoveCompanyFavorite, {
     body: z.object({
       companyId: z.number(),
       applicantId: z.number(),

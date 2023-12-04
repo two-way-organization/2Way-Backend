@@ -1,4 +1,4 @@
-import { prismaClient } from '../../../../../utils/prisma-client';
+import { prismaClient } from '../../../../../../utils/prisma-client';
 
 import type { Job, EducationLevel, ExperienceLevel, JobLocation } from '@prisma/client';
 

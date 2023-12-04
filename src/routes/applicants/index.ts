@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { register } from './unauthenticated/applicants/register';
 import { login } from './unauthenticated/applicants/login';
 
-import { randomJobs } from './unauthenticated/jobs/random-jobs';
-import { recentJobs } from './unauthenticated/jobs/recent-jobs';
+import { randomJobs } from './authenticated/applicants/jobs/random-jobs';
+import { recentJobs } from './authenticated/applicants/jobs/recent-jobs';
+import { searchJob } from './authenticated/applicants/jobs/search';
 
 import { deregister } from './authenticated/applicants/delete';
 import { modification } from './authenticated/applicants/modification';
@@ -31,9 +32,7 @@ import { applicantSetCompanyFavorite } from './authenticated/companies/set-favor
 import { applicantRemoveCompanyFavorite } from './authenticated/companies/unset-favorites';
 
 import { applicationsSavedJobs } from './authenticated/saved-jobs';
-
 import { applicantsRecentlyViewed } from './authenticated/recently-viewed';
-
 import { applicationsSavedCompany } from './authenticated/saved-company';
 
 import { applicationsDetails } from '../companies/authenticated/applications/detail';
@@ -70,9 +69,6 @@ export const unauthenticatedApplicantRoutes = () => {
       }),
     }
   );
-  
-  prefixedRouter.get('/jobs/random', randomJobs);
-  prefixedRouter.get('/jobs/recent', recentJobs);
 
   return prefixedRouter;
 };
@@ -200,6 +196,18 @@ export const authenticatedApplicantRoutes = () => {
   prefixedRouter.get('/saved-jobs', applicationsSavedJobs);
   prefixedRouter.get('/recently-viewed', applicantsRecentlyViewed);
   prefixedRouter.get('/saved-company', applicationsSavedCompany);
+
+  prefixedRouter.get('/jobs/random', randomJobs);
+  prefixedRouter.get('/jobs/recent', recentJobs);
+  prefixedRouter.get('/jobs/search', searchJob, {
+    query: z.object({
+      location: z.enum(['Seoul', 'Busan', 'Daegu', 'Incheon', 'Gwangju', 'Daejeon', 'Ulsan', 'Sejong', 'Gyeonggi', 'Gangwon', 'Chungbuk', 'Chungnam', 'Jeonbuk', 'Jeonnam', 'Gyeongbuk', 'Gyeongnam', 'Jeju']),
+      title: z.string(),
+      jobType: z.enum(['Regular', 'Contract', 'Intern']),
+      experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),
+      skills: z.array(z.string()),
+    }),
+  });
 
   return prefixedRouter;
 };

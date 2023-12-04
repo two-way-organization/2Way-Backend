@@ -1,12 +1,12 @@
 import { ApplicantJob, jobsToApplicantJobs } from './utils/jobs-to-applicant-jobs';
 
-import { prismaClient } from '../../../../utils/prisma-client';
+import { prismaClient } from '../../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { Job } from '@prisma/client';
-import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
+import type { JwtPayloadState } from '../../../../@types/jwt-payload-state';
 
 export interface RandomJobsResponseBody {
   jobs: ApplicantJob[];

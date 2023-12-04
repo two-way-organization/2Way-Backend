@@ -1,6 +1,6 @@
 import { JobStatus, type JobLocation, type ExperienceLevel, type JobType, type JobSalary } from '@prisma/client';
 
-import { prismaClient } from '../../../utils/prisma-client';
+import { prismaClient } from '../../../../../utils/prisma-client';
 
 import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';

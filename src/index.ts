@@ -12,7 +12,7 @@ import cors from '@koa/cors';
 import { authenticatedApplicantRoutes, unauthenticatedApplicantRoutes } from './routes/applicants';
 import { authenticatedCompanyRoutes, unauthenticatedCompanyRoutes } from './routes/companies';
 import { authenticatedUtilsRoutes } from './routes/utils';
-import { authenticatedJobRoutes, unauthenticatedJobRoutes } from './routes/job';
+import { authenticatedJobRoutes, unauthenticatedJobRoutes } from './routes/jobs';
 
 const omit = (key: string, obj: Record<string, unknown>) => {
   const { [key]: omitted, ...rest } = obj;

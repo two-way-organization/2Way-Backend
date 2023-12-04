@@ -14,7 +14,7 @@ export const improveSentence = async (question: string, personalStatement: strin
   const response = await chatGptApi.sendMessage(
     `질문: ${question}\n자소서: ${personalStatement}`,
     {
-      systemMessage: '입력된 질문을 기반으로 한 입력된 자기소개서에 대하여, 각 문장에 대한 수정 이유와 각 문장에 대한 개선된 문장을 제공해주십시오.\n질문은 "질문: " 뒤에 입력되고, 자기소개서는 "자소서: " 뒤에 입력됩니다.\n반드시 아래와 같은 형식의 JSON으로 답변해주십시오.\n[{"original": "원본 문장", "reason": "수정 이유", "improved": "개선 문장"}, {...}]',
+      systemMessage: '입력된 질문을 기반으로 한 입력된 자기소개서에 대하여, 각 문장에 대한 수정 이유와 각 문장에 대한 개선된 문장을 제공해주십시오.\n질문은 "질문: " 뒤에 입력되고, 자기소개서는 "자소서: " 뒤에 입력됩니다.\n반드시 아래와 같은 형식의 JSON으로 "JSON 외의 부가적인 설명 없이" 답변해주십시오.\n[{"original": "원본 문장", "reason": "수정 이유", "improved": "개선 문장"}, {...}]',
     }
   );
 

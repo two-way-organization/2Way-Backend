@@ -121,6 +121,36 @@ export const getJob = async (
       },
     }))!;
 
+    const applicantActivity = await prismaClient.applicantActivity.findUnique({
+      where: {
+        applicantId,
+        jobId,
+      },
+      select: {
+        viewedAt: true,
+      },
+    });
+
+    if (applicantActivity) {
+      await prismaClient.applicantActivity.update({
+        where: {
+          applicantId,
+          jobId,
+        },
+        data: {
+          viewedAt: new Date(),
+        },
+      });
+    } else {
+      await prismaClient.applicantActivity.create({
+        data: {
+          applicantId,
+          jobId,
+          viewedAt: new Date(),
+        },
+      });
+    }
+
     ctx.body = {
       jobs: {
         jobId: job.id,

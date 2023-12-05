@@ -202,11 +202,15 @@ export const authenticatedApplicantRoutes = () => {
   prefixedRouter.get('/jobs/recent', recentJobs);
   prefixedRouter.get('/jobs/search', searchJob, {
     query: z.object({
-      location: z.enum(['Seoul', 'Busan', 'Daegu', 'Incheon', 'Gwangju', 'Daejeon', 'Ulsan', 'Sejong', 'Gyeonggi', 'Gangwon', 'Chungbuk', 'Chungnam', 'Jeonbuk', 'Jeonnam', 'Gyeongbuk', 'Gyeongnam', 'Jeju']),
-      title: z.string(),
-      jobType: z.enum(['Regular', 'Contract', 'Intern']),
-      experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),
-      skills: z.array(z.string()),
+      location: z.enum(['Seoul', 'Busan', 'Daegu', 'Incheon', 'Gwangju', 'Daejeon', 'Ulsan', 'Sejong', 'Gyeonggi', 'Gangwon', 'Chungbuk', 'Chungnam', 'Jeonbuk', 'Jeonnam', 'Gyeongbuk', 'Gyeongnam', 'Jeju']).optional(),
+      title: z.string().optional(),
+      position: z.string().optional(),
+      jobType: z.enum(['Regular', 'Contract', 'Intern']).optional(),
+      experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']).optional(),
+      educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']).optional(),
+      skills: z.array(z.string()).optional(),
+      page: z.number().min(1),
+      pageSize: z.number().min(1),
     }),
   });
   prefixedRouter.get('/jobs/:jobId', getJob, {

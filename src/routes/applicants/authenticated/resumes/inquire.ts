@@ -4,11 +4,13 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
-import type { ApplicantResume } from '@prisma/client';
+import type { ApplicantResume, Applicant } from '@prisma/client';
 import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface InfoResponseBody {
-  profile: ApplicantResume;
+  profile: ApplicantResume & {
+    applicant: Omit<Applicant, 'password'>,
+  };
 }
 
 export const inquire = async (
@@ -19,6 +21,9 @@ export const inquire = async (
   const account = await prismaClient.applicantResume.findUnique({
     where: {
       applicantId: id,
+    },
+    include: {
+      applicant: true,
     },
   });
 
@@ -31,7 +36,12 @@ export const inquire = async (
     ctx.status = 200;
     ctx.body = {
       message: 'Profile retrieval successful.',
-      profile: account,
+      profile: {
+        ...account,
+        applicant: Object.fromEntries(
+          Object.entries(account.applicant).filter(([key]) => key !== 'password')
+        ) as Omit<Applicant, 'password'>,
+      },
     };
   }
 };

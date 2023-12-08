@@ -18,7 +18,7 @@ export const randomJobs = async (
   // get random 5 jobs
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const randomJobs = (await prismaClient.$queryRawUnsafe(
-    'SELECT * FROM "Job" ORDER BY RANDOM() LIMIT 5;',
+    'SELECT * FROM Job ORDER BY RAND() LIMIT 5;',
   )) as Job[];
 
   if (!randomJobs) {

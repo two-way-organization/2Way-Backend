@@ -8,7 +8,7 @@ import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface ExtendJobRequestBody {
   jobId: number;
-  endDate: Date;
+  endDate: string;
 }
 
 export interface ExtendJobResponseBody {
@@ -43,7 +43,7 @@ export const extendJob = async (
         id: jobId,
       },
       data: {
-        endDate,
+        endDate: new Date(endDate),
       },
     });
 

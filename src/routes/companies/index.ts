@@ -98,14 +98,11 @@ export const authenticatedCompanyRoutes = () => {
         companyName: z.string(),
         ceoName: z.string(),
         introduction: z.string().optional(),
-        industries: z.array(z.object({
-          solutionId: z.number(),
-        })),
         logoImage: z.string(),
         companyType: z.enum(['SmallBusiness', 'MediumEnterprise', 'Enterprise']),
         numberOfEmployees: z.number(),
         capital: z.number(),
-        establishmentDate: z.date(),
+        establishmentDate: z.string().datetime(),
         mainBusiness: z.array(z.string()),
       }),
     }),
@@ -126,7 +123,7 @@ export const authenticatedCompanyRoutes = () => {
   prefixedRouter.put('/jobs/extend', extendJob, {
     body: z.object({
       jobId: z.number(),
-      endDate: z.date(),
+      endDate: z.string().datetime(),
     }),
   });
   prefixedRouter.delete('/jobs', deleteJob, {
@@ -150,8 +147,8 @@ export const authenticatedCompanyRoutes = () => {
     body: z.object({
       title: z.string(),
       position: z.string(),
-      startDate: z.date(),
-      endDate: z.date(),
+      startDate: z.string().datetime(),
+      endDate: z.string().datetime(),
       numberOfVacancies: z.number(),
       educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
       experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),

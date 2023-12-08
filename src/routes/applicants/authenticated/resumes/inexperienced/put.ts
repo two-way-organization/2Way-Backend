@@ -14,7 +14,7 @@ export interface ResumePutRequestBody {
     schoolName: string,
     major: string,
     gender: string,
-    birth: Date,
+    birth: string,
     address: string,
     experienceLevel: ExperienceLevel,
   };
@@ -57,7 +57,7 @@ export const resumeInexperiencedPut = async (
         schoolName: profile.schoolName,
         major: profile.major,
         gender: profile.gender,
-        birth: profile.birth,
+        birth: new Date(profile.birth),
         address: profile.address,
         experienceLevel: profile.experienceLevel,
       },

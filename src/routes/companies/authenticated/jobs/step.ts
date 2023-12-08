@@ -12,8 +12,8 @@ import type { JobTopicDetail } from './types';
 interface JobCreateRequestBody {
   title: string;
   position: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   numberOfVacancies: number;
   experienceLevel: ExperienceLevel;
   educationLevel: EducationLevel;
@@ -85,8 +85,8 @@ export const createJob = async (
           positionId: positionModel.id,
         },
       },
-      startDate,
-      endDate,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       numberOfVacancies,
       experienceLevel,
       educationLevel,

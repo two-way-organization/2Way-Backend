@@ -3,6 +3,7 @@ import { prismaClient } from '../../../../../../utils/prisma-client';
 import type { Job, EducationLevel, ExperienceLevel, JobLocation } from '@prisma/client';
 
 export interface ApplicantJob {
+  jobId: number;
   companyName: string;
   title: string;
   startDate: Date;
@@ -23,6 +24,7 @@ export const jobsToApplicantJobs = async (jobs: Job[]): Promise<ApplicantJob[]> 
 
     if (companyInfo) {
       return {
+        jobId: job.id,
         companyName: companyInfo.companyName,
         title: job.title,
         startDate: job.startDate,

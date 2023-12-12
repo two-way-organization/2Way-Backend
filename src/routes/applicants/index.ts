@@ -107,7 +107,7 @@ export const authenticatedApplicantRoutes = () => {
       profile: z.object({
         baekjoonId: z.string(),
         gitHubId: z.string(),
-        educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
+        educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'EducationNotRequired']),
         schoolName: z.string(),
         major: z.string(),
         gender: z.string(),
@@ -122,7 +122,7 @@ export const authenticatedApplicantRoutes = () => {
       profile: z.object({
         baekjoonId: z.string(),
         gitHubId: z.string(),
-        educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
+        educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'EducationNotRequired']),
         schoolName: z.string(),
         major: z.string(),
         gender: z.string(),

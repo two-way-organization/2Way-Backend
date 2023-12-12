@@ -30,7 +30,7 @@ export const inquire = async (
   if (!account) {
     ctx.status = 404;
     ctx.body = {
-      message: 'Account not found.',
+      message: 'Resume not found',
     };
   } else {
     ctx.status = 200;

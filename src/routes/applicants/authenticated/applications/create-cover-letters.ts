@@ -63,8 +63,8 @@ export const createCoverLetters = async (
               id: applicationId,
             },
           },
-          applicantResponse: question.applicantResponse,
-          summarizedResponse: await summarizeDocument(question.applicantResponse),
+          applicantResponse: question.applicantResponse ?? '',
+          summarizedResponse: await summarizeDocument(question.applicantResponse) ?? '',
         },
       });
     }));

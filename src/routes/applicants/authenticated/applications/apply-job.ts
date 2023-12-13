@@ -34,8 +34,10 @@ export const applyJob = async (
   } else {
     const application = await prismaClient.application.findUnique({
       where: {
-        applicantId,
-        jobId,
+        applicantId_jobId: {
+          applicantId,
+          jobId,
+        },
       },
     });
 
@@ -45,6 +47,7 @@ export const applyJob = async (
         message: 'Application already exists.',
         applicationId: application.id,
       };
+      return;
     } else {
       const newApplication = await prismaClient.application.create({
         data: {

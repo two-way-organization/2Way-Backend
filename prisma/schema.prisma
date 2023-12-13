@@ -128,8 +128,8 @@ model ApplicantResume {
 
 model Application {
   id          Int                @id @default(autoincrement())
-  applicantId Int                @unique
-  jobId       Int                @unique
+  applicantId Int
+  jobId       Int
   status      ApplicationStatus  @default(Waiting) // 진행 상태
   result      ApplicationResult? // 최종 결과 (옵션)
   appliedAt   DateTime           @default(now())
@@ -138,7 +138,7 @@ model Application {
   // Applicant와의 일대다 관계
   applicant Applicant @relation(fields: [applicantId], references: [id])
 
-  // Job와의 일대다 관계
+  // J @uniqueob와의 일대다 관계
   job Job @relation(fields: [jobId], references: [id])
 
   // ApplicationQuestion와의 일대다 관계
@@ -151,6 +151,7 @@ model Application {
   applicantActivity ApplicantActivity[]
 
   @@map("Application")
+  @@unique([applicantId, jobId])
 }
 
 model ApplicationQuestion {

@@ -49,6 +49,12 @@ export const createCoverLetters = async (
       message: 'Not found.',
     };
   } else {
+    await prismaClient.applicationQuestion.deleteMany({
+      where: {
+        applicationId,
+      },
+    });
+
     const questionsData = await Promise.all(questions.reverse().map(async (question) => {
       return await prismaClient.applicationQuestion.create({
         data: {

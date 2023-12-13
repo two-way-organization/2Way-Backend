@@ -135,7 +135,7 @@ export const authenticatedApplicantRoutes = () => {
       }),
     }),
   });
-  prefixedRouter.post('/applications/apply-job', applyJob, {
+  prefixedRouter.put('/applications/apply-job', applyJob, {
     body: z.object({
       jobId: z.number(),
     }),

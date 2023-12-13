@@ -40,9 +40,10 @@ export const applyJob = async (
     });
 
     if (application) {
-      ctx.status = 409;
+      ctx.status = 200;
       ctx.body = {
         message: 'Application already exists.',
+        applicationId: application.id,
       };
     } else {
       const newApplication = await prismaClient.application.create({
@@ -60,7 +61,7 @@ export const applyJob = async (
         },
       });
 
-      ctx.status = 200;
+      ctx.status = 201;
       ctx.body = {
         applicationId: newApplication.id,
       };

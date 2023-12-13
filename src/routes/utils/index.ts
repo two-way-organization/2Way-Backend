@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { githubLanguageUsage } from './authenticated/github-language-usage';
 import { solvedAcTier } from './authenticated/solved-ac-tier';
 import { roadAddress } from './authenticated/road-address';
+import { postSpellCheck } from './authenticated/spell-check';
 
 export const authenticatedUtilsRoutes = () => {
   const prefixedRouter = zodRouter({
@@ -38,6 +39,15 @@ export const authenticatedUtilsRoutes = () => {
         keyword: z.string(),
         currentPage: z.number(),
         countPerPage: z.number(),
+      }),
+    }
+  );
+  prefixedRouter.post(
+    '/spell-check',
+    postSpellCheck,
+    {
+      body: z.object({
+        text: z.string(),
       }),
     }
   );

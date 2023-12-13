@@ -142,7 +142,7 @@ export const authenticatedApplicantRoutes = () => {
   });
   prefixedRouter.put('/applications/:applicationId/cover-letters', createCoverLetters, {
     params: z.object({
-      applicationId: z.number(),
+      applicationId: z.string(),
     }),
     body: z.object({
       questions: z.array(z.object({
@@ -152,21 +152,29 @@ export const authenticatedApplicantRoutes = () => {
   });
   prefixedRouter.post('/applications/:applicationId/cover-letters/analyze', analyzeCoverLetters, {
     params: z.object({
-      applicationId: z.number(),
+      applicationId: z.string(),
     }),
   });
-  prefixedRouter.get('/applications/:applicationId/cover-letters', getCoverLetters);
+  prefixedRouter.get('/applications/:applicationId/cover-letters', getCoverLetters, {
+    params: z.object({
+      applicationId: z.string(),
+    }),
+  });
   prefixedRouter.get('/applications/status/waiting', waitingApplications);
   prefixedRouter.get('/applications/status/preferred', preferredApplications);
   prefixedRouter.get('/applications/status/success', successApplications);
   prefixedRouter.get('/applications/status/failed', failedApplications);
   prefixedRouter.delete('/applications/:applicationId', deleteApplication, {
     params: z.object({
-      applicationId: z.number(),
+      applicationId: z.string(),
     }),
   });
 
-  prefixedRouter.get('/applications/:applicationId/details', applicationsDetails);
+  prefixedRouter.get('/applications/:applicationId/details', applicationsDetails, {
+    params: z.object({
+      applicationId: z.string(),
+    }),
+  });
 
   prefixedRouter.put('/jobs/favorites', applicantSetJobFavorite, {
     body: z.object({
@@ -205,12 +213,12 @@ export const authenticatedApplicantRoutes = () => {
       location: z.enum(['Seoul', 'Busan', 'Daegu', 'Incheon', 'Gwangju', 'Daejeon', 'Ulsan', 'Sejong', 'Gyeonggi', 'Gangwon', 'Chungbuk', 'Chungnam', 'Jeonbuk', 'Jeonnam', 'Gyeongbuk', 'Gyeongnam', 'Jeju']).optional(),
       title: z.string().optional(),
       position: z.string().optional(),
-      jobType: z.enum(['Regular', 'Contract', 'Intern']).optional(),
+      jobType: z.enum(['Regular', 'Contract', 'ConversionIntern', 'Intern']).optional(),
       experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']).optional(),
       educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']).optional(),
       skills: z.array(z.string()).optional(),
-      page: z.number().min(1),
-      pageSize: z.number().min(1),
+      page: z.string().min(1),
+      pageSize: z.string().min(1),
     }),
   });
   prefixedRouter.get('/jobs/:jobId', getJob, {

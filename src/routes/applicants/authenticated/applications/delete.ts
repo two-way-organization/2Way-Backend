@@ -5,7 +5,7 @@ import type { ParameterizedContext } from 'koa';
 import type { ZodContext } from 'koa-zod-router';
 
 export interface DeleteRequestParams {
-  applicationId: number;
+  applicationId: string;
 }
 
 export interface DeleteResponseBody {
@@ -16,7 +16,8 @@ export const deleteApplication = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, DeleteRequestParams, unknown, unknown, unknown>, DeleteResponseBody>,
 ) => {
   const { id: applicantId } = ctx.state.user;
-  const { applicationId } = ctx.request.params;
+  const { applicationId: stringApplicationId } = ctx.request.params;
+  const applicationId = parseInt(stringApplicationId);
 
   const application = await prismaClient.application.findUnique({
     where: {

@@ -7,7 +7,7 @@ import type { ZodContext } from 'koa-zod-router';
 import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface GetCoverLettersRequestParams {
-  applicationId: number;
+  applicationId: string;
 }
 
 export interface GetCoverLettersResponseBody {
@@ -22,7 +22,8 @@ export const getCoverLetters = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, GetCoverLettersRequestParams, unknown, unknown, unknown>, ErrorResponse | GetCoverLettersResponseBody>,
 ) => {
   const { id: applicantId } = ctx.state.user;
-  const { applicationId } = ctx.request.params;
+  const { applicationId: stringApplicationId } = ctx.request.params;
+  const applicationId = parseInt(stringApplicationId);
 
   const account = await prismaClient.applicant.findUnique({
     where: {

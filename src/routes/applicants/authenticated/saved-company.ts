@@ -65,7 +65,7 @@ export const applicationsSavedCompany = async (
   ctx.body = {
     company: companies.map((company) => ({
       companyId: company.id,
-      companyName: company.name,
+      companyName: company.companyInfo!.companyName,
       logoImage: company.companyInfo!.logoImage,
     })),
     pagination: {

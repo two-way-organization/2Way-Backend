@@ -9,7 +9,7 @@ import type { JwtPayloadState } from '../../../@types/jwt-payload-state';
 import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface ApplicationsDetailsParams {
-  applicationId: number;
+  applicationId: string;
 }
 
 export interface ApplicationsDetailsResponseBody {
@@ -22,7 +22,8 @@ export const applicationsDetails = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, ApplicationsDetailsParams, unknown, unknown, unknown>, ErrorResponse | ApplicationsDetailsResponseBody>,
 ) => {
   const { id: applicantId } = ctx.state.user;
-  const { applicationId } = ctx.request.params;
+  const { applicationId: stringApplicationId } = ctx.request.params;
+  const applicationId = parseInt(stringApplicationId);
   const application = await prismaClient.application.findUnique({
     where: {
       id: applicationId,
@@ -43,10 +44,16 @@ export const applicationsDetails = async (
         where: {
           applicantId,
         },
+        include: {
+          applicant: true,
+        },
       }),
       questions: await prismaClient.applicationQuestion.findMany({
         where: {
           applicationId,
+        },
+        include: {
+          application: true,
         },
       }),
     };

@@ -1,9 +1,10 @@
 import type { ErrorResponse } from '../../../../@types/error-response';
+import type { Job } from '@prisma/client';
 
 interface StatusResponseBody {
   applications: {
     applicationId: number;
-    jobId: number;
+    job: Job;
     status: string;
     appliedAt: Date;
     updatedAt: Date;

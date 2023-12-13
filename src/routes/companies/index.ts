@@ -152,7 +152,7 @@ export const authenticatedCompanyRoutes = () => {
       numberOfVacancies: z.number(),
       educationLevel: z.enum(['MastersOrDoctorate', 'AssociateDegree', 'BachelorsDegree', 'MastersOrDoctorate', 'EducationNotRequired']),
       experienceLevel: z.enum(['Newcomer', 'Experienced', 'Unspecified']),
-      jobType: z.enum(['Regular', 'Contract', 'Intern']),
+      jobType: z.enum(['Regular', 'Contract', 'ConversionIntern', 'Intern']),
       skill: z.string(),
       contractPeriod: z.string(),
       salary: z.enum(['DecisionAfterTheInterview', 'AccordingToCompanyPolicy']),

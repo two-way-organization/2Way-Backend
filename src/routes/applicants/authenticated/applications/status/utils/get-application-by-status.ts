@@ -13,11 +13,15 @@ export const getApplicationByStatus = async (
   orderBy: {
     updatedAt: 'desc',
   },
-  select: {
-    id: true,
-    jobId: true,
-    status: true,
-    appliedAt: true,
-    updatedAt: true,
-  }
+  include: {
+    job: {
+      include: {
+        company: {
+          include: {
+            companyInfo: true,
+          }
+        },
+      }
+    }
+  },
 });

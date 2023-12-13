@@ -151,7 +151,7 @@ model Application {
   applicantActivity ApplicantActivity[]
 
   @@map("Application")
-  @@unique([applicantId, jobId])
+  @@unique([applicantId, jobId], name: "applicationUniqueId")
 }
 
 model ApplicationQuestion {

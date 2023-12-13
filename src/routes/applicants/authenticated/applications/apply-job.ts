@@ -34,7 +34,7 @@ export const applyJob = async (
   } else {
     const application = await prismaClient.application.findUnique({
       where: {
-        applicantId_jobId: {
+        applicationUniqueId: {
           applicantId,
           jobId,
         },

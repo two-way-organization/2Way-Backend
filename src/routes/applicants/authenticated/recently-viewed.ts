@@ -5,6 +5,7 @@ import type { ParameterizedContext } from 'koa';
 
 import type { JwtPayloadState } from '../../@types/jwt-payload-state';
 import type { ErrorResponse } from '../../@types/error-response';
+import type { Job } from '@prisma/client';
 
 export interface ApplicantsRecentlyViewedRequestQuery {
   page: number;
@@ -12,12 +13,7 @@ export interface ApplicantsRecentlyViewedRequestQuery {
 }
 
 export interface ApplicantsRecentlyViewedResponseBody {
-  jobs: {
-    jobId: number;
-    title: string;
-    endDate: Date;
-    applicationCount: number;
-  }[];
+  jobs: Job[];
   pagination: {
     currentPage: number;
     totalPage: number;
@@ -59,18 +55,17 @@ export const applicantsRecentlyViewed = async (
       },
     },
     include: {
-      company: true,
+      company: {
+        include: {
+          companyInfo: true,
+        }
+      },
     },
   });
 
   ctx.status = 200;
   ctx.body = {
-    jobs: jobs.map((it) => ({
-      jobId: it.id,
-      title: it.title,
-      endDate: it.endDate,
-      applicationCount: it.applicationCount,
-    })),
+    jobs: jobs,
     pagination: {
       currentPage: page,
       totalPage: Math.ceil(totalItems / pageSize),

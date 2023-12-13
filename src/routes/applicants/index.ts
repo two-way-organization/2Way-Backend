@@ -179,26 +179,22 @@ export const authenticatedApplicantRoutes = () => {
   prefixedRouter.put('/jobs/favorites', applicantSetJobFavorite, {
     body: z.object({
       jobId: z.number(),
-      applicantId: z.number(),
     }),
   });
   prefixedRouter.put('/jobs/favorites', applicantRemoveJobFavorite, {
     body: z.object({
       jobId: z.number(),
-      applicantId: z.number(),
     }),
   });
 
   prefixedRouter.put('/companies/favorites', applicantSetCompanyFavorite, {
     body: z.object({
       companyId: z.number(),
-      applicantId: z.number(),
     }),
   });
   prefixedRouter.put('/companies/favorites', applicantRemoveCompanyFavorite, {
     body: z.object({
       companyId: z.number(),
-      applicantId: z.number(),
     }),
   });
 

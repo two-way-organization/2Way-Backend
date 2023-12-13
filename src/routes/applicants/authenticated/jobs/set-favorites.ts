@@ -7,7 +7,6 @@ import type { ErrorResponse } from '../../../@types/error-response';
 
 export interface ApplicantFavoriteRequestBody {
   jobId: number;
-  applicantId: number;
 }
 
 export interface ApplicantFavoriteResponseBody {
@@ -17,7 +16,8 @@ export interface ApplicantFavoriteResponseBody {
 export const applicantSetJobFavorite = async (
   ctx: ParameterizedContext<JwtPayloadState, ZodContext<unknown, unknown, unknown, ApplicantFavoriteRequestBody, unknown>, ErrorResponse | ApplicantFavoriteResponseBody>,
 ) => {
-  const { jobId, applicantId } = ctx.request.body;
+  const { id: applicantId } = ctx.state.user;
+  const { jobId } = ctx.request.body;
 
 
   const existData = await prismaClient.applicantActivity.findUnique({

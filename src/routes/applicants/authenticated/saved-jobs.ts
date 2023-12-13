@@ -1,6 +1,6 @@
 import { prismaClient } from '../../../utils/prisma-client';
 
-import type { ExperienceLevel, EducationLevel } from '@prisma/client';
+import type { Job } from '@prisma/client';
 
 import type { ZodContext } from 'koa-zod-router';
 import type { ParameterizedContext } from 'koa';
@@ -15,15 +15,7 @@ export interface ApplicationsSavedJobsRequestQuery {
 }
 
 export interface ApplicationsSavedJobsResponseBody {
-  jobs: {
-    companyName: string;
-    title: string;
-    startDate: Date;
-    endDate: Date;
-    experienceLevel: ExperienceLevel;
-    educationLevel: EducationLevel;
-    logoImage: string;
-  }[];
+  jobs: Job[];
   pagination: {
     currentPage: number;
     totalPage: number;
@@ -74,15 +66,7 @@ export const applicationsSavedJobs = async (
 
   ctx.status = 200;
   ctx.body = {
-    jobs: jobs.map((job) => ({
-      companyName: job.company.name,
-      title: job.title,
-      startDate: job.startDate,
-      endDate: job.endDate,
-      experienceLevel: job.experienceLevel,
-      educationLevel: job.educationLevel,
-      logoImage: job.company.companyInfo!.logoImage,
-    })),
+    jobs,
     pagination: {
       currentPage: page,
       totalPage: Math.ceil(totalItems / pageSize),
